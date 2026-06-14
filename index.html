@@ -1651,39 +1651,60 @@
           icons += ' <span class="card-icon red" title="Red Card"></span>';
         return icons;
       }
-      function addScorer(stage, group, idx, side, name, inputEl) {
-        if (!name || !name.trim()) return;
+      function addScorer(stage, groupOrIndex, matchIndex, side, name, el) {
+        if (!name) return;
 
-        // Cek apakah tombol OG, YC, RC sedang aktif
-        const ogBtn = inputEl.nextElementSibling;
-        const ycBtn = ogBtn ? ogBtn.nextElementSibling : null;
-        const rcBtn = ycBtn ? ycBtn.nextElementSibling : null;
+        let matches;
+        if (stage === "groups") {
+          matches = state.matches.groups[groupOrIndex];
+        } else {
+          matches = state.matches[stage];
+        }
+        const match = matches[matchIndex];
 
-        const isOG = ogBtn && ogBtn.classList.contains("active-og");
-        const isYC = ycBtn && ycBtn.classList.contains("active-yc");
-        const isRC = rcBtn && rcBtn.classList.contains("active-rc");
+        // Cari tombel OG/YC/RC yang sebaris dengan dropdown/input ini
+        const parentRow = el.closest(".flex");
+        const ogBtn = parentRow
+          ? parentRow.querySelector(".og-selector")
+          : null;
+        const ycBtn = parentRow
+          ? parentRow.querySelector('.btn-icon[title="Yellow Card"]')
+          : null;
+        const rcBtn = parentRow
+          ? parentRow.querySelector('.btn-icon[title="Red Card"]')
+          : null;
 
-        let matchArr;
-        if (stage === "groups") matchArr = state.matches.groups[group];
-        else matchArr = state.matches[stage];
+        const isOG = ogBtn ? ogBtn.classList.contains("active-og") : false;
+        const isYC = ycBtn ? ycBtn.classList.contains("active-yc") : false;
+        const isRC = rcBtn ? rcBtn.classList.contains("active-rc") : false;
 
-        const match = matchArr[idx];
-        const scorerObj = { name: name.trim(), og: isOG, yc: isYC, rc: isRC };
+        // WAJIB simpan sebagai Object agar konsisten
+        match[side + "Scorers"].push({
+          name: name,
+          og: isOG,
+          yc: isYC,
+          rc: isRC,
+        });
 
-        if (side === "home") match.homeScorers.push(scorerObj);
-        else match.awayScorers.push(scorerObj);
-
-        // Reset input & tombol
-        if (inputEl.tagName === "SELECT") inputEl.value = "";
-        else inputEl.value = "";
+        // Reset UI setelah menambah
+        if (el.tagName === "SELECT") {
+          el.value = "";
+        } else {
+          el.value = "";
+        }
         if (ogBtn) ogBtn.classList.remove("active-og");
         if (ycBtn) ycBtn.classList.remove("active-yc");
         if (rcBtn) rcBtn.classList.remove("active-rc");
 
-        // Re-render
-        if (stage === "groups") renderGroupCard(group);
-        else renderKnockout(stage);
+        // Render ulang
+        if (stage === "groups") {
+          renderGroupCard(groupOrIndex);
+        } else {
+          renderKnockout(stage);
+        }
 
+        // PENTING: Langsung update statistik Golden Boot setelah mencetak gol!
+        renderStats();
         saveToLocal();
       }
 
@@ -1941,9 +1962,58 @@
       }
 
       function renderStats() {
+        // ==========================================
+        // 1. GOLDEN BOOT (Rekap dari semua match)
+        // ==========================================
+        const scorerMap = {};
+        const countScorers = (scorersArr, teamName) => {
+          if (!scorersArr) return;
+          // Gunakan ensureScorerFormat agar data lama (string) tetap terbaca
+          const fixedArr = ensureScorerFormat(scorersArr);
+
+          fixedArr.forEach((scorerObj) => {
+            const name = scorerObj.name;
+            const isOG = scorerObj.og;
+
+            // PENTING: Gol Own Goal (OG) TIDAK dihitung untuk Golden Boot
+            if (name && !isOG) {
+              if (!scorerMap[name]) {
+                scorerMap[name] = { name: name, team: teamName, goals: 0 };
+              }
+              scorerMap[name].goals++;
+            }
+          });
+        };
+
+        // Loop Group Stage
+        GROUPS.forEach((g) => {
+          state.matches.groups[g].forEach((m) => {
+            if (m.homeScore != null && state.groups[g][m.home]) {
+              const h = state.groups[g][m.home],
+                a = state.groups[g][m.away];
+              countScorers(m.homeScorers, h.name);
+              countScorers(m.awayScorers, a.name);
+            }
+          });
+        });
+
+        // Loop Knockout Stage
+        ["r32", "r16", "qf", "sf", "third", "final"].forEach((s) => {
+          state.matches[s].forEach((m) => {
+            if (m.homeScore != null && m.home) {
+              countScorers(m.homeScorers, m.home.name);
+              countScorers(m.awayScorers, m.away.name);
+            }
+          });
+        });
+
+        // Render Golden Boot
         const sl = document.getElementById("top-scorer-list");
-        sl.innerHTML = state.scorers.length
-          ? state.scorers
+        const topScorers = Object.values(scorerMap).sort(
+          (a, b) => b.goals - a.goals,
+        );
+        sl.innerHTML = topScorers.length
+          ? topScorers
               .slice(0, 5)
               .map(
                 (s, i) =>
@@ -1952,6 +2022,9 @@
               .join("")
           : '<p class="text-[--muted] text-sm">No data</p>';
 
+        // ==========================================
+        // 2. BEST OFFENSIVE, DEFENSIVE, CLEAN SHEET
+        // ==========================================
         const ts = {};
         const init = (n, c) => {
           if (!n || n.startsWith("TBD")) return;
@@ -1987,6 +2060,7 @@
             }
           }),
         );
+
         const arr = Object.values(ts);
 
         document.getElementById("stat-attack").innerHTML = arr
@@ -1997,6 +2071,7 @@
               `<div class="award-item"><div class="flex items-center gap-2">${getFlagHTML(t)}<span class="font-semibold text-xs">${t.name}</span></div><span class="font-bold text-[--success]">${t.gf} G</span></div>`,
           )
           .join("");
+
         document.getElementById("stat-defense").innerHTML = arr
           .filter((t) => t.pl > 0)
           .sort((a, b) => a.ga - b.ga)
@@ -2006,6 +2081,7 @@
               `<div class="award-item"><div class="flex items-center gap-2">${getFlagHTML(t)}<span class="font-semibold text-xs">${t.name}</span></div><span class="font-bold text-[--danger]">${t.ga} Cn</span></div>`,
           )
           .join("");
+
         document.getElementById("top-clean-sheet-list").innerHTML = arr
           .filter((t) => t.pl > 0)
           .sort((a, b) => b.cs - a.cs)
@@ -2016,35 +2092,54 @@
           )
           .join("");
 
+        // ==========================================
+        // 3. HAT-TRICKS (Diperbaiki untuk membaca Object)
+        // ==========================================
         let ht = [];
-        const check = (m, h, a) => {
-          const cnt = (s, tn) => {
+        const checkHattrick = (m, hName, aName) => {
+          if (!m.homeScorers) return;
+
+          const cnt = (scorersArr, teamName) => {
+            const fixedArr = ensureScorerFormat(scorersArr);
             const c = {};
-            s.forEach((n) => (c[n] = (c[n] || 0) + 1));
-            return Object.entries(c).map(([n, c]) => ({
+            fixedArr.forEach((scorerObj) => {
+              // Hitung hat-trick hanya jika bukan Own Goal
+              if (scorerObj.name && !scorerObj.og) {
+                c[scorerObj.name] = (c[scorerObj.name] || 0) + 1;
+              }
+            });
+            return Object.entries(c).map(([n, goalCount]) => ({
               name: n,
-              team: tn,
-              c,
+              team: teamName,
+              c: goalCount,
             }));
           };
-          if (!m.homeScorers) return;
-          cnt(m.homeScorers, h.name)
-            .concat(cnt(m.awayScorers, a.name))
+
+          cnt(m.homeScorers, hName)
+            .concat(cnt(m.awayScorers, aName))
             .forEach((p) => {
               if (p.c >= 3) ht.push(p);
             });
         };
+
         GROUPS.forEach((g) =>
           state.matches.groups[g].forEach((m) => {
             if (m.homeScore != null)
-              check(m, state.groups[g][m.home], state.groups[g][m.away]);
+              checkHattrick(
+                m,
+                state.groups[g][m.home].name,
+                state.groups[g][m.away].name,
+              );
           }),
         );
+
         ["r32", "r16", "qf", "sf", "third", "final"].forEach((s) =>
           state.matches[s].forEach((m) => {
-            if (m.homeScore != null) check(m, m.home, m.away);
+            if (m.homeScore != null && m.home)
+              checkHattrick(m, m.home.name, m.away.name);
           }),
         );
+
         document.getElementById("hat-trick-list").innerHTML = ht.length
           ? ht
               .map(
