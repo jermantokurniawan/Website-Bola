@@ -1651,39 +1651,60 @@
           icons += ' <span class="card-icon red" title="Red Card"></span>';
         return icons;
       }
-      function addScorer(stage, group, idx, side, name, inputEl) {
-        if (!name || !name.trim()) return;
+      function addScorer(stage, groupOrIndex, matchIndex, side, name, el) {
+        if (!name) return;
 
-        // Cek apakah tombol OG, YC, RC sedang aktif
-        const ogBtn = inputEl.nextElementSibling;
-        const ycBtn = ogBtn ? ogBtn.nextElementSibling : null;
-        const rcBtn = ycBtn ? ycBtn.nextElementSibling : null;
+        let matches;
+        if (stage === "groups") {
+          matches = state.matches.groups[groupOrIndex];
+        } else {
+          matches = state.matches[stage];
+        }
+        const match = matches[matchIndex];
 
-        const isOG = ogBtn && ogBtn.classList.contains("active-og");
-        const isYC = ycBtn && ycBtn.classList.contains("active-yc");
-        const isRC = rcBtn && rcBtn.classList.contains("active-rc");
+        // Cari tombel OG/YC/RC yang sebaris dengan dropdown/input ini
+        const parentRow = el.closest(".flex");
+        const ogBtn = parentRow
+          ? parentRow.querySelector(".og-selector")
+          : null;
+        const ycBtn = parentRow
+          ? parentRow.querySelector('.btn-icon[title="Yellow Card"]')
+          : null;
+        const rcBtn = parentRow
+          ? parentRow.querySelector('.btn-icon[title="Red Card"]')
+          : null;
 
-        let matchArr;
-        if (stage === "groups") matchArr = state.matches.groups[group];
-        else matchArr = state.matches[stage];
+        const isOG = ogBtn ? ogBtn.classList.contains("active-og") : false;
+        const isYC = ycBtn ? ycBtn.classList.contains("active-yc") : false;
+        const isRC = rcBtn ? rcBtn.classList.contains("active-rc") : false;
 
-        const match = matchArr[idx];
-        const scorerObj = { name: name.trim(), og: isOG, yc: isYC, rc: isRC };
+        // WAJIB simpan sebagai Object agar konsisten
+        match[side + "Scorers"].push({
+          name: name,
+          og: isOG,
+          yc: isYC,
+          rc: isRC,
+        });
 
-        if (side === "home") match.homeScorers.push(scorerObj);
-        else match.awayScorers.push(scorerObj);
-
-        // Reset input & tombol
-        if (inputEl.tagName === "SELECT") inputEl.value = "";
-        else inputEl.value = "";
+        // Reset UI setelah menambah
+        if (el.tagName === "SELECT") {
+          el.value = "";
+        } else {
+          el.value = "";
+        }
         if (ogBtn) ogBtn.classList.remove("active-og");
         if (ycBtn) ycBtn.classList.remove("active-yc");
         if (rcBtn) rcBtn.classList.remove("active-rc");
 
-        // Re-render
-        if (stage === "groups") renderGroupCard(group);
-        else renderKnockout(stage);
+        // Render ulang
+        if (stage === "groups") {
+          renderGroupCard(groupOrIndex);
+        } else {
+          renderKnockout(stage);
+        }
 
+        // PENTING: Langsung update statistik Golden Boot setelah mencetak gol!
+        renderStats();
         saveToLocal();
       }
 
