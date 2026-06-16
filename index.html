@@ -919,6 +919,48 @@
               <div id="top-clean-sheet-list" class="space-y-3"></div>
             </div>
           </div>
+          <div class="card p-6">
+            <h3
+              class="font-display text-xl border-b border-[--border] pb-2 mb-4"
+              style="color: #facc15"
+            >
+              <span
+                class="card-icon yellow mr-1"
+                style="
+                  width: 10px;
+                  height: 14px;
+                  display: inline-block;
+                  vertical-align: middle;
+                  border-radius: 2px;
+                  background: #facc15;
+                  border: 1px solid #eab308;
+                "
+              ></span>
+              Yellow Cards
+            </h3>
+            <div id="yc-list" class="space-y-2"></div>
+          </div>
+          <div class="card p-6">
+            <h3
+              class="font-display text-xl border-b border-[--border] pb-2 mb-4"
+              style="color: #ef4444"
+            >
+              <span
+                class="card-icon red mr-1"
+                style="
+                  width: 10px;
+                  height: 14px;
+                  display: inline-block;
+                  vertical-align: middle;
+                  border-radius: 2px;
+                  background: #ef4444;
+                  border: 1px solid #dc2626;
+                "
+              ></span>
+              Red Cards
+            </h3>
+            <div id="rc-list" class="space-y-2"></div>
+          </div>
           <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="card p-6">
               <h3
@@ -2179,6 +2221,113 @@
               )
               .join("")
           : '<p class="text-[--muted] text-xs">None</p>';
+        processCards(); // <--- TAMBAHKAN INI DI SINI
+
+        function processCards() {
+          const ycData = {};
+          const rcData = {};
+
+          const allMatchArrays = [
+            ...Object.values(state.matches.groups).flat(),
+            ...(state.matches.r32 || []),
+            ...(state.matches.r16 || []),
+            ...(state.matches.qf || []),
+            ...(state.matches.sf || []),
+            ...(state.matches.third || []),
+            ...(state.matches.final || []),
+          ];
+
+          allMatchArrays.forEach((match) => {
+            if (!match) return;
+            const processSide = (scorers, sideIndex) => {
+              let teamName = "";
+              // Cari nama tim berdasarkan index (grup) atau langsung ambil nama (knockout)
+              if (match.round && match.round.startsWith("Group")) {
+                const groupName = match.round.split(" ")[1];
+                const teams = state.groups[groupName];
+                if (teams && teams[sideIndex]) teamName = teams[sideIndex].name;
+              } else {
+                if (sideIndex === "home" && match.home && match.home.name)
+                  teamName = match.home.name;
+                if (sideIndex === "away" && match.away && match.away.name)
+                  teamName = match.away.name;
+              }
+
+              const formattedScorers = ensureScorerFormat(scorers);
+              formattedScorers.forEach((p) => {
+                if (p.yc) {
+                  if (!ycData[p.name])
+                    ycData[p.name] = { team: teamName, count: 0 };
+                  ycData[p.name].count += 1;
+                  ycData[p.name].team = teamName || ycData[p.name].team; // Update team jika sebelumnya kosong
+                }
+                if (p.rc) {
+                  if (!rcData[p.name])
+                    rcData[p.name] = { team: teamName, count: 0 };
+                  rcData[p.name].count += 1;
+                  rcData[p.name].team = teamName || rcData[p.name].team;
+                }
+              });
+            };
+
+            processSide(match.homeScorers || [], match.home);
+            processSide(match.awayScorers || [], match.away);
+          });
+
+          // Render Yellow Cards
+          const ycList = document.getElementById("yc-list");
+          const ycArr = Object.entries(ycData).sort(
+            (a, b) => b[1].count - a[1].count,
+          );
+          if (ycArr.length === 0) {
+            ycList.innerHTML =
+              '<p class="text-xs text-[--muted] italic">Belum ada data</p>';
+          } else {
+            ycList.innerHTML = ycArr
+              .map(
+                ([name, data], i) => `
+            <div class="flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-[--muted] w-4">${i + 1}.</span>
+                <span class="font-semibold">${name}</span>
+                <span class="text-[--muted]">(${data.team})</span>
+              </div>
+              <span class="flex items-center gap-1 font-bold" style="color: #facc15;">
+                <span class="card-icon yellow" style="width:6px;height:10px;"></span> ${data.count}
+              </span>
+            </div>
+          `,
+              )
+              .join("");
+          }
+
+          // Render Red Cards
+          const rcList = document.getElementById("rc-list");
+          const rcArr = Object.entries(rcData).sort(
+            (a, b) => b[1].count - a[1].count,
+          );
+          if (rcArr.length === 0) {
+            rcList.innerHTML =
+              '<p class="text-xs text-[--muted] italic">Belum ada data</p>';
+          } else {
+            rcList.innerHTML = rcArr
+              .map(
+                ([name, data], i) => `
+            <div class="flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-[--muted] w-4">${i + 1}.</span>
+                <span class="font-semibold">${name}</span>
+                <span class="text-[--muted]">(${data.team})</span>
+              </div>
+              <span class="flex items-center gap-1 font-bold" style="color: #ef4444;">
+                <span class="card-icon red" style="width:6px;height:10px;"></span> ${data.count}
+              </span>
+            </div>
+          `,
+              )
+              .join("");
+          }
+        }
       }
 
       function checkChampion() {
