@@ -251,12 +251,12 @@
 
       .standing-row {
         display: grid;
-        grid-template-columns: 30px 1fr 35px 35px 35px 35px 40px;
-        gap: 6px;
-        padding: 8px 10px;
+        grid-template-columns: 22px 1fr 26px 26px 26px 26px 26px 26px 30px 32px; /* Ditambah 35px 2x untuk GF dan GA */
+        gap: 2px;
+        padding: 6px 6px;
         border-radius: 6px;
         align-items: center;
-        font-size: 0.8rem;
+        font-size: 0.7rem;
       }
       .standing-row.header {
         background: rgba(0, 0, 0, 0.3);
@@ -1495,17 +1495,48 @@
           })
           .join("");
 
-        const stand = `<div class="standing-row header"><span>#</span><span>Team</span><span>P</span><span>W</span><span>D</span><span>L</span><span>Pts</span></div>
+        // Hitung GF dan GA secara dinamis dari hasil match
+        const gfGaMap = {};
+        t.forEach((team) => {
+          gfGaMap[team.name] = { gf: 0, ga: 0 };
+        });
+
+        m.forEach((match) => {
+          const homeTeam = t[match.home];
+          const awayTeam = t[match.away];
+          if (
+            homeTeam &&
+            awayTeam &&
+            match.homeScore !== null &&
+            match.awayScore !== null
+          ) {
+            gfGaMap[homeTeam.name].gf += parseInt(match.homeScore) || 0;
+            gfGaMap[homeTeam.name].ga += parseInt(match.awayScore) || 0;
+            gfGaMap[awayTeam.name].gf += parseInt(match.awayScore) || 0;
+            gfGaMap[awayTeam.name].ga += parseInt(match.homeScore) || 0;
+          }
+        });
+
+      const stand = `<div class="standing-row header"><span>#</span><span>Team</span><span class="text-center">P</span><span class="text-center">W</span><span class="text-center">D</span><span class="text-center">L</span><span class="text-center">F</span><span class="text-center">A</span><span class="text-center">GD</span><span class="text-center">Pts</span></div>
       ${s
-        .map(
-          (x, i) => `<div class="standing-row ${i < 2 ? "qualified" : ""} mt-1">
-      <span class="font-bold text-xs ${i < 2 ? "text-[--success]" : "text-[--muted]"}">${i + 1}</span>
-      <div class="team-name-container truncate">${getFlagHTML(x)}<span class="font-semibold text-xs truncate">${x.team}</span></div>
-      <span class="text-center text-[--muted]">${x.played}</span><span class="text-center text-[--muted]">${x.won}</span>
-      <span class="text-center text-[--muted]">${x.drawn}</span><span class="text-center text-[--muted]">${x.lost}</span>
-      <span class="text-center font-bold ${i < 2 ? "text-[--accent]" : "text-[--fg]"}">${x.points}</span>
-      </div>`,
-        )
+        .map((x, i) => {
+          const gf = gfGaMap[x.team] ? gfGaMap[x.team].gf : 0;
+          const ga = gfGaMap[x.team] ? gfGaMap[x.team].ga : 0;
+          const gd = gf - ga;
+          const gdText = gd > 0 ? `+${gd}` : gd;
+          return `<div class="standing-row ${i < 2 ? "qualified" : ""} mt-1">
+      <span class="font-bold text-[10px] ${i < 2 ? "text-[--success]" : "text-[--muted]"}">${i + 1}</span>
+      <div class="team-name-container truncate">${getFlagHTML(x)}<span class="font-semibold text-[10px] truncate">${x.team}</span></div>
+      <span class="text-center text-[10px] text-[--muted]">${x.played}</span>
+      <span class="text-center text-[10px] text-[--muted]">${x.won}</span>
+      <span class="text-center text-[10px] text-[--muted]">${x.drawn}</span>
+      <span class="text-center text-[10px] text-[--muted]">${x.lost}</span>
+      <span class="text-center text-[10px] text-[--muted]">${gf}</span>
+      <span class="text-center text-[10px] text-[--muted]">${ga}</span>
+      <span class="text-center text-[10px] font-semibold ${gd > 0 ? "text-[--success]" : gd < 0 ? "text-[--danger]" : "text-[--muted]"}">${gdText}</span>
+      <span class="text-center font-bold text-[11px] ${i < 2 ? "text-[--accent]" : "text-[--fg]"}">${x.points}</span>
+      </div>`;
+        })
         .join("")}`;
 
         c.innerHTML = `<div class="flex items-center justify-between mb-3 pb-2 border-b border-[--border]"><span class="bg-gradient-to-r from-[--accent] to-yellow-300 text-[--bg] font-bold px-3 py-1 rounded text-xs tracking-wider">GROUP ${g}</span></div>${setup}<div class="space-y-3 mb-4">${matches}</div><div class="border-t border-[--border] pt-3">${stand}</div>`;
