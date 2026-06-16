@@ -1810,56 +1810,112 @@
       }
 
       function calcStand(g) {
-        const t = state.groups[g];
-        const m = state.matches.groups[g];
-        const s = {};
-        t.forEach(
-          (x) =>
-            (s[x.name] = {
-              team: x.name,
-              code: x.code,
-              played: 0,
-              won: 0,
-              drawn: 0,
-              lost: 0,
-              gd: 0,
-              points: 0,
-              gf: 0,
-              ga: 0,
-            }),
-        );
-        m.forEach((x) => {
-          if (x.homeScore !== null && x.awayScore !== null) {
-            const h = s[t[x.home].name];
-            const a = s[t[x.away].name];
+        const teams = state.groups[g];
+        const matches = state.matches.groups[g];
+
+        // 1. Inisialisasi data klasemen untuk setiap tim
+        let standingsMap = {};
+        teams.forEach((t, idx) => {
+          if (!t.name) return;
+          standingsMap[idx] = {
+            idx: idx,
+            team: t.name,
+            code: t.code,
+            played: 0,
+            won: 0,
+            drawn: 0,
+            lost: 0,
+            gf: 0, // Gol Memasukkan (Goals For)
+            ga: 0, // Gol Kemasukan (Goals Against)
+            gd: 0, // Selisih Gol (Goal Difference)
+            points: 0,
+            yc: 0, // Kartu Kuning (untuk tie-breaker Fair Play jika dibutuhkan)
+            rc: 0, // Kartu Merah
+          };
+        });
+
+        // 2. Hitung semua statistik dari pertandingan yang sudah dimainkan
+        matches.forEach((m) => {
+          const h = standingsMap[m.home];
+          const a = standingsMap[m.away];
+          if (!h || !a) return; // Lewati jika tim belum diisi
+
+          const hs = m.homeScore;
+          const as = m.awayScore;
+
+          // Hanya hitung jika pertandingan sudah dimainkan (skor bukan null)
+          if (hs !== null && as !== null && hs !== "" && as !== "") {
             h.played++;
             a.played++;
-            h.gf += x.homeScore;
-            h.ga += x.awayScore;
-            a.gf += x.awayScore;
-            a.ga += x.homeScore;
-            const d = x.homeScore - x.awayScore;
-            h.gd += d;
-            a.gd -= d;
-            if (d > 0) {
+
+            const homeScore = Number(hs);
+            const awayScore = Number(as);
+
+            h.gf += homeScore;
+            h.ga += awayScore;
+            a.gf += awayScore;
+            a.ga += homeScore;
+
+            if (homeScore > awayScore) {
               h.won++;
               h.points += 3;
               a.lost++;
-            } else if (d < 0) {
+            } else if (homeScore < awayScore) {
               a.won++;
               a.points += 3;
               h.lost++;
             } else {
               h.drawn++;
+              h.points += 1;
               a.drawn++;
-              h.points++;
-              a.points++;
+              a.points += 1;
             }
           }
+
+          // Hitung kartu kuning dan merah dari array scorers
+          if (m.homeScorers && m.homeScorers.length > 0) {
+            m.homeScorers.forEach((p) => {
+              if (p.yc) h.yc++;
+              if (p.rc) h.rc++;
+            });
+          }
+          if (m.awayScorers && m.awayScorers.length > 0) {
+            m.awayScorers.forEach((p) => {
+              if (p.yc) a.yc++;
+              if (p.rc) a.rc++;
+            });
+          }
         });
-        state.standings[g] = Object.values(s).sort(
-          (a, b) => b.points - a.points || b.gd - a.gd,
-        );
+
+        // 3. Hitung GD (Selisih Gol)
+        Object.values(standingsMap).forEach((s) => {
+          s.gd = s.gf - s.ga;
+        });
+
+        // 4. UBAH KE ARRAY LALU SORTING DENGAN TIE-BREAKER
+        let standingsArr = Object.values(standingsMap);
+
+        standingsArr.sort((a, b) => {
+          // Tie-breaker 1: Poin lebih tinggi
+          if (b.points !== a.points) return b.points - a.points;
+
+          // Tie-breaker 2: Selisih Gol (GD) lebih tinggi
+          if (b.gd !== a.gd) return b.gd - a.gd;
+
+          // Tie-breaker 3: Gol Memasukkan (GF) lebih tinggi <- INI YANG MEMPERBAIKI MASALAH ANDA
+          if (b.gf !== a.gf) return b.gf - a.gf;
+
+          // Tie-breaker 4 (Opsional): Poin Fair Play (Kartu Kuning/Merah lebih sedikit lebih baik)
+          const aFP = a.yc + a.rc * 3;
+          const bFP = b.yc + b.rc * 3;
+          if (bFP !== aFP) return aFP - bFP; // Semakin sedikit kartu, semakin tinggi peringkat
+
+          // Tie-breaker 5: Urutkan berdasarkan abjad jika semua di atas sama persis
+          return a.team.localeCompare(b.team);
+        });
+
+        // 5. Simpan hasilnya ke state.standings
+        state.standings[g] = standingsArr;
       }
 
       const nextMap = { r32: "r16", r16: "qf", qf: "sf", sf: "final" };
