@@ -251,12 +251,12 @@
 
       .standing-row {
         display: grid;
-        grid-template-columns: 30px 1fr 35px 35px 35px 35px 40px;
-        gap: 6px;
-        padding: 8px 10px;
+        grid-template-columns: 22px 1fr 26px 26px 26px 26px 26px 26px 30px 32px; /* Ditambah 35px 2x untuk GF dan GA */
+        gap: 2px;
+        padding: 6px 6px;
         border-radius: 6px;
         align-items: center;
-        font-size: 0.8rem;
+        font-size: 0.7rem;
       }
       .standing-row.header {
         background: rgba(0, 0, 0, 0.3);
@@ -919,6 +919,48 @@
               <div id="top-clean-sheet-list" class="space-y-3"></div>
             </div>
           </div>
+          <div class="card p-6">
+            <h3
+              class="font-display text-xl border-b border-[--border] pb-2 mb-4"
+              style="color: #facc15"
+            >
+              <span
+                class="card-icon yellow mr-1"
+                style="
+                  width: 10px;
+                  height: 14px;
+                  display: inline-block;
+                  vertical-align: middle;
+                  border-radius: 2px;
+                  background: #facc15;
+                  border: 1px solid #eab308;
+                "
+              ></span>
+              Yellow Cards
+            </h3>
+            <div id="yc-list" class="space-y-2"></div>
+          </div>
+          <div class="card p-6">
+            <h3
+              class="font-display text-xl border-b border-[--border] pb-2 mb-4"
+              style="color: #ef4444"
+            >
+              <span
+                class="card-icon red mr-1"
+                style="
+                  width: 10px;
+                  height: 14px;
+                  display: inline-block;
+                  vertical-align: middle;
+                  border-radius: 2px;
+                  background: #ef4444;
+                  border: 1px solid #dc2626;
+                "
+              ></span>
+              Red Cards
+            </h3>
+            <div id="rc-list" class="space-y-2"></div>
+          </div>
           <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="card p-6">
               <h3
@@ -1495,17 +1537,48 @@
           })
           .join("");
 
-        const stand = `<div class="standing-row header"><span>#</span><span>Team</span><span>P</span><span>W</span><span>D</span><span>L</span><span>Pts</span></div>
+        // Hitung GF dan GA secara dinamis dari hasil match
+        const gfGaMap = {};
+        t.forEach((team) => {
+          gfGaMap[team.name] = { gf: 0, ga: 0 };
+        });
+
+        m.forEach((match) => {
+          const homeTeam = t[match.home];
+          const awayTeam = t[match.away];
+          if (
+            homeTeam &&
+            awayTeam &&
+            match.homeScore !== null &&
+            match.awayScore !== null
+          ) {
+            gfGaMap[homeTeam.name].gf += parseInt(match.homeScore) || 0;
+            gfGaMap[homeTeam.name].ga += parseInt(match.awayScore) || 0;
+            gfGaMap[awayTeam.name].gf += parseInt(match.awayScore) || 0;
+            gfGaMap[awayTeam.name].ga += parseInt(match.homeScore) || 0;
+          }
+        });
+
+        const stand = `<div class="standing-row header"><span>#</span><span>Team</span><span class="text-center">P</span><span class="text-center">W</span><span class="text-center">D</span><span class="text-center">L</span><span class="text-center">F</span><span class="text-center">A</span><span class="text-center">GD</span><span class="text-center">Pts</span></div>
       ${s
-        .map(
-          (x, i) => `<div class="standing-row ${i < 2 ? "qualified" : ""} mt-1">
-      <span class="font-bold text-xs ${i < 2 ? "text-[--success]" : "text-[--muted]"}">${i + 1}</span>
-      <div class="team-name-container truncate">${getFlagHTML(x)}<span class="font-semibold text-xs truncate">${x.team}</span></div>
-      <span class="text-center text-[--muted]">${x.played}</span><span class="text-center text-[--muted]">${x.won}</span>
-      <span class="text-center text-[--muted]">${x.drawn}</span><span class="text-center text-[--muted]">${x.lost}</span>
-      <span class="text-center font-bold ${i < 2 ? "text-[--accent]" : "text-[--fg]"}">${x.points}</span>
-      </div>`,
-        )
+        .map((x, i) => {
+          const gf = gfGaMap[x.team] ? gfGaMap[x.team].gf : 0;
+          const ga = gfGaMap[x.team] ? gfGaMap[x.team].ga : 0;
+          const gd = gf - ga;
+          const gdText = gd > 0 ? `+${gd}` : gd;
+          return `<div class="standing-row ${i < 2 ? "qualified" : ""} mt-1">
+      <span class="font-bold text-[10px] ${i < 2 ? "text-[--success]" : "text-[--muted]"}">${i + 1}</span>
+      <div class="team-name-container truncate">${getFlagHTML(x)}<span class="font-semibold text-[10px] truncate">${x.team}</span></div>
+      <span class="text-center text-[10px] text-[--muted]">${x.played}</span>
+      <span class="text-center text-[10px] text-[--muted]">${x.won}</span>
+      <span class="text-center text-[10px] text-[--muted]">${x.drawn}</span>
+      <span class="text-center text-[10px] text-[--muted]">${x.lost}</span>
+      <span class="text-center text-[10px] text-[--muted]">${gf}</span>
+      <span class="text-center text-[10px] text-[--muted]">${ga}</span>
+      <span class="text-center text-[10px] font-semibold ${gd > 0 ? "text-[--success]" : gd < 0 ? "text-[--danger]" : "text-[--muted]"}">${gdText}</span>
+      <span class="text-center font-bold text-[11px] ${i < 2 ? "text-[--accent]" : "text-[--fg]"}">${x.points}</span>
+      </div>`;
+        })
         .join("")}`;
 
         c.innerHTML = `<div class="flex items-center justify-between mb-3 pb-2 border-b border-[--border]"><span class="bg-gradient-to-r from-[--accent] to-yellow-300 text-[--bg] font-bold px-3 py-1 rounded text-xs tracking-wider">GROUP ${g}</span></div>${setup}<div class="space-y-3 mb-4">${matches}</div><div class="border-t border-[--border] pt-3">${stand}</div>`;
@@ -2148,6 +2221,114 @@
               )
               .join("")
           : '<p class="text-[--muted] text-xs">None</p>';
+
+        processCards(); // <--- TAMBAHKAN INI DI SINI
+
+        function processCards() {
+          const ycData = {};
+          const rcData = {};
+
+          const allMatchArrays = [
+            ...Object.values(state.matches.groups).flat(),
+            ...(state.matches.r32 || []),
+            ...(state.matches.r16 || []),
+            ...(state.matches.qf || []),
+            ...(state.matches.sf || []),
+            ...(state.matches.third || []),
+            ...(state.matches.final || []),
+          ];
+
+          allMatchArrays.forEach((match) => {
+            if (!match) return;
+            const processSide = (scorers, sideIndex) => {
+              let teamName = "";
+              // Cari nama tim berdasarkan index (grup) atau langsung ambil nama (knockout)
+              if (match.round && match.round.startsWith("Group")) {
+                const groupName = match.round.split(" ")[1];
+                const teams = state.groups[groupName];
+                if (teams && teams[sideIndex]) teamName = teams[sideIndex].name;
+              } else {
+                if (sideIndex === "home" && match.home && match.home.name)
+                  teamName = match.home.name;
+                if (sideIndex === "away" && match.away && match.away.name)
+                  teamName = match.away.name;
+              }
+
+              const formattedScorers = ensureScorerFormat(scorers);
+              formattedScorers.forEach((p) => {
+                if (p.yc) {
+                  if (!ycData[p.name])
+                    ycData[p.name] = { team: teamName, count: 0 };
+                  ycData[p.name].count += 1;
+                  ycData[p.name].team = teamName || ycData[p.name].team; // Update team jika sebelumnya kosong
+                }
+                if (p.rc) {
+                  if (!rcData[p.name])
+                    rcData[p.name] = { team: teamName, count: 0 };
+                  rcData[p.name].count += 1;
+                  rcData[p.name].team = teamName || rcData[p.name].team;
+                }
+              });
+            };
+
+            processSide(match.homeScorers || [], match.home);
+            processSide(match.awayScorers || [], match.away);
+          });
+
+          // Render Yellow Cards
+          const ycList = document.getElementById("yc-list");
+          const ycArr = Object.entries(ycData).sort(
+            (a, b) => b[1].count - a[1].count,
+          );
+          if (ycArr.length === 0) {
+            ycList.innerHTML =
+              '<p class="text-xs text-[--muted] italic">Belum ada data</p>';
+          } else {
+            ycList.innerHTML = ycArr
+              .map(
+                ([name, data], i) => `
+            <div class="flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-[--muted] w-4">${i + 1}.</span>
+                <span class="font-semibold">${name}</span>
+                <span class="text-[--muted]">(${data.team})</span>
+              </div>
+              <span class="flex items-center gap-1 font-bold" style="color: #facc15;">
+                <span class="card-icon yellow" style="width:6px;height:10px;"></span> ${data.count}
+              </span>
+            </div>
+          `,
+              )
+              .join("");
+          }
+
+          // Render Red Cards
+          const rcList = document.getElementById("rc-list");
+          const rcArr = Object.entries(rcData).sort(
+            (a, b) => b[1].count - a[1].count,
+          );
+          if (rcArr.length === 0) {
+            rcList.innerHTML =
+              '<p class="text-xs text-[--muted] italic">Belum ada data</p>';
+          } else {
+            rcList.innerHTML = rcArr
+              .map(
+                ([name, data], i) => `
+            <div class="flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-[--muted] w-4">${i + 1}.</span>
+                <span class="font-semibold">${name}</span>
+                <span class="text-[--muted]">(${data.team})</span>
+              </div>
+              <span class="flex items-center gap-1 font-bold" style="color: #ef4444;">
+                <span class="card-icon red" style="width:6px;height:10px;"></span> ${data.count}
+              </span>
+            </div>
+          `,
+              )
+              .join("");
+          }
+        }
       }
 
       function checkChampion() {
