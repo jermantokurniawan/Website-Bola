@@ -1,515 +1,1186 @@
 <!doctype html>
 <html lang="id">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>World Cup 2026 Score Board</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet"/>
-<style>
-:root{--bg:#0f172a;--card:rgba(30,41,59,0.85);--border:#334155;--accent:#f59e0b;--fg:#f1f5f9;--muted:#94a3b8;--success:#10b981;--danger:#ef4444;--secondary:#06b6d4}
-*{box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);margin:0;min-height:100vh}
-.font-d{font-family:'Bebas Neue',sans-serif}
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;backdrop-filter:blur(12px)}
-.inp{background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:4px;color:var(--fg);padding:4px 6px;font-size:0.8rem;outline:none}
-.inp:focus{border-color:var(--accent)}
-.inp-score{width:40px;height:32px;text-align:center;font-weight:700;font-size:0.9rem;background:rgba(0,0,0,0.4);border:2px solid var(--border);border-radius:6px;color:var(--fg);outline:none}
-.inp-score:focus{border-color:var(--accent)}
-.btn{padding:8px 16px;border-radius:8px;font-weight:700;font-size:0.8rem;cursor:pointer;border:none;text-transform:uppercase;transition:0.2s}
-.btn-p{background:linear-gradient(135deg,var(--accent),#d97706);color:#000}
-.btn-s{background:linear-gradient(135deg,var(--secondary),#0891b2);color:#fff}
-.btn:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(0,0,0,0.3)}
-.tab{padding:8px 16px;border-radius:99px;font-weight:600;font-size:0.8rem;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:0.2s}
-.tab.on{background:var(--accent);color:#000;border-color:var(--accent)}
-.tab:hover:not(.on){border-color:var(--accent);color:var(--fg)}
-.flag{width:22px;height:16px;border-radius:2px;object-fit:cover;display:inline-block;vertical-align:middle;background:#555}
-.s-row{display:grid;grid-template-columns:20px 1fr 28px 28px 28px 28px 28px 28px 32px 32px;gap:2px;padding:5px;align-items:center;font-size:0.7rem;border-radius:4px}
-.s-hdr{background:rgba(0,0,0,0.3);color:var(--muted);text-transform:uppercase;font-size:0.65rem}
-.s-q{background:rgba(16,185,129,0.15);border-left:3px solid var(--success)}
-.s-tq{background:rgba(6,182,212,0.15);border-left:3px solid var(--secondary)}
-.toast{position:fixed;bottom:30px;right:30px;background:var(--success);color:#fff;padding:12px 24px;border-radius:8px;font-weight:700;z-index:999;transform:translateY(100px);opacity:0;transition:0.4s}
-.toast.show{transform:translateY(0);opacity:1}
-.hdr{position:sticky;top:0;z-index:50;background:rgba(15,23,42,0.95);border-bottom:1px solid var(--border);backdrop-filter:blur(10px)}
-.hdr-btn{background:rgba(255,255,255,0.1);border:1px solid var(--border);color:var(--fg);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.75rem;font-weight:500}
-.hdr-btn:hover{border-color:var(--accent)}
-.hdr-btn.sav{background:var(--success);border-color:var(--success);color:#fff}
-.match-box{background:rgba(0,0,0,0.15);border-radius:8px;padding:10px;margin-bottom:8px}
-.scorer-tag{display:inline-block;background:rgba(6,182,212,0.2);color:var(--secondary);padding:2px 6px;border-radius:10px;font-size:0.65rem;margin:1px}
-.scorer-tag button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.8rem;margin-left:2px}
-.scorer-tag button:hover{color:var(--danger)}
-.pen-box{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;padding:6px;background:rgba(0,0,0,0.2);border-radius:6px;font-size:0.8rem}
-.pen-inp{width:40px;height:28px;text-align:center;font-weight:700;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:4px;color:var(--fg)}
-.sch-card{background:linear-gradient(100deg,rgba(30,41,59,0.9),rgba(15,23,42,0.9));border-left:4px solid var(--secondary);border-radius:8px;padding:12px;display:flex;align-items:center;gap:12px;margin-bottom:8px}
-</style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>World Cup 2026 Score Board</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0f172a;
+        --card: rgba(30, 41, 59, 0.85);
+        --border: #334155;
+        --accent: #f59e0b;
+        --fg: #f1f5f9;
+        --muted: #94a3b8;
+        --success: #10b981;
+        --danger: #ef4444;
+        --secondary: #06b6d4;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        margin: 0;
+        min-height: 100vh;
+      }
+      .font-d {
+        font-family: "Bebas Neue", sans-serif;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        backdrop-filter: blur(12px);
+      }
+      .inp {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--fg);
+        padding: 4px 6px;
+        font-size: 0.8rem;
+        outline: none;
+      }
+      .inp:focus {
+        border-color: var(--accent);
+      }
+      .inp-score {
+        width: 40px;
+        height: 32px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+        background: rgba(0, 0, 0, 0.4);
+        border: 2px solid var(--border);
+        border-radius: 6px;
+        color: var(--fg);
+        outline: none;
+      }
+      .inp-score:focus {
+        border-color: var(--accent);
+      }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        cursor: pointer;
+        border: none;
+        text-transform: uppercase;
+        transition: 0.2s;
+      }
+      .btn-p {
+        background: linear-gradient(135deg, var(--accent), #d97706);
+        color: #000;
+      }
+      .btn-s {
+        background: linear-gradient(135deg, var(--secondary), #0891b2);
+        color: #fff;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      }
+      .tab {
+        padding: 8px 16px;
+        border-radius: 99px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--muted);
+        transition: 0.2s;
+      }
+      .tab.on {
+        background: var(--accent);
+        color: #000;
+        border-color: var(--accent);
+      }
+      .tab:hover:not(.on) {
+        border-color: var(--accent);
+        color: var(--fg);
+      }
+      .flag {
+        width: 22px;
+        height: 16px;
+        border-radius: 2px;
+        object-fit: cover;
+        display: inline-block;
+        vertical-align: middle;
+        background: #555;
+      }
+      .s-row {
+        display: grid;
+        grid-template-columns: 20px 1fr 28px 28px 28px 28px 28px 28px 32px 32px;
+        gap: 2px;
+        padding: 5px;
+        align-items: center;
+        font-size: 0.7rem;
+        border-radius: 4px;
+      }
+      .s-hdr {
+        background: rgba(0, 0, 0, 0.3);
+        color: var(--muted);
+        text-transform: uppercase;
+        font-size: 0.65rem;
+      }
+      .s-q {
+        background: rgba(16, 185, 129, 0.15);
+        border-left: 3px solid var(--success);
+      }
+      .s-tq {
+        background: rgba(6, 182, 212, 0.15);
+        border-left: 3px solid var(--secondary);
+      }
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: var(--success);
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 700;
+        z-index: 999;
+        transform: translateY(100px);
+        opacity: 0;
+        transition: 0.4s;
+      }
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .hdr {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(15, 23, 42, 0.95);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(10px);
+      }
+      .hdr-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--border);
+        color: var(--fg);
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+      .hdr-btn:hover {
+        border-color: var(--accent);
+      }
+      .hdr-btn.sav {
+        background: var(--success);
+        border-color: var(--success);
+        color: #fff;
+      }
+      .match-box {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 8px;
+      }
+      .scorer-tag {
+        display: inline-block;
+        background: rgba(6, 182, 212, 0.2);
+        color: var(--secondary);
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-size: 0.65rem;
+        margin: 1px;
+      }
+      .scorer-tag button {
+        background: none;
+        border: none;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 0.8rem;
+        margin-left: 2px;
+      }
+      .scorer-tag button:hover {
+        color: var(--danger);
+      }
+      .pen-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 8px;
+        padding: 6px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 6px;
+        font-size: 0.8rem;
+      }
+      .pen-inp {
+        width: 40px;
+        height: 28px;
+        text-align: center;
+        font-weight: 700;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--fg);
+      }
+      .sch-card {
+        background: linear-gradient(
+          100deg,
+          rgba(30, 41, 59, 0.9),
+          rgba(15, 23, 42, 0.9)
+        );
+        border-left: 4px solid var(--secondary);
+        border-radius: 8px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="toast" class="toast">Data Berhasil Disimpan!</div>
 
-<div id="toast" class="toast">Data Berhasil Disimpan!</div>
-
-<!-- HEADER -->
-<header class="hdr">
-<div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-  <h1 class="font-d text-3xl tracking-wider" style="color:var(--accent)">FIFA WORLD CUP 2026 <span class="text-sm text-[--muted] italic font-sans">by Jermanto Setia Kurniawan</span></h1>
-  <div class="flex gap-2 flex-wrap">
-    <button class="hdr-btn sav" onclick="handleSave()">Save</button>
-    <button class="hdr-btn" onclick="exportData()">Export</button>
-    <label class="hdr-btn cursor-pointer">Import<input type="file" accept=".json" class="hidden" onchange="importData(event)"></label>
-    <button class="hdr-btn" style="color:var(--danger);border-color:var(--danger)" onclick="if(confirm('Reset semua data?')){localStorage.clear();location.reload()}">Reset</button>
-  </div>
-</div>
-</header>
-
-<!-- NAVIGATION -->
-<nav class="max-w-7xl mx-auto px-4 py-3 flex gap-2 overflow-x-auto">
-  <button class="tab on" onclick="openTab('schedule', this)">Schedule</button>
-  <button class="tab" onclick="openTab('groups', this)">Group Stage</button>
-  <button class="tab" onclick="openTab('r32', this)">Round of 32</button>
-  <button class="tab" onclick="openTab('r16', this)">Round of 16</button>
-  <button class="tab" onclick="openTab('qf', this)">QF</button>
-  <button class="tab" onclick="openTab('sf', this)">SF</button>
-  <button class="tab" onclick="openTab('final', this)">Final</button>
-</nav>
-
-<!-- MAIN CONTENT -->
-<main class="max-w-7xl mx-auto px-4 pb-12">
-  
-  <!-- SCHEDULE SECTION -->
-  <section id="sec-schedule">
-    <h2 class="font-d text-2xl mb-6" style="color:var(--fg)">MATCH SCHEDULE</h2>
-    <div id="schedule-list"></div>
-  </section>
-
-  <!-- GROUP STAGE SECTION -->
-  <section id="sec-groups" class="hidden">
-    <div class="flex flex-col sm:flex-row gap-3 mb-6 card">
-      <div>
-        <h2 class="font-d text-2xl" style="color:var(--fg)">GROUP STAGE</h2>
-        <p class="text-xs" style="color:var(--muted)">Rank 1 & 2 lolos otomatis. Rank 3 terbaik (8 tim) lolos ke R32.</p>
+    <!-- HEADER -->
+    <header class="hdr">
+      <div
+        class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2"
+      >
+        <h1 class="font-d text-3xl tracking-wider" style="color: var(--accent)">
+          FIFA WORLD CUP 2026
+          <span class="text-sm text-[--muted] italic font-sans"
+            >by Jermanto Setia Kurniawan</span
+          >
+        </h1>
+        <div class="flex gap-2 flex-wrap">
+          <button class="hdr-btn sav" onclick="handleSave()">Save</button>
+          <button class="hdr-btn" onclick="exportData()">Export</button>
+          <label class="hdr-btn cursor-pointer"
+            >Import<input
+              type="file"
+              accept=".json"
+              class="hidden"
+              onchange="importData(event)"
+          /></label>
+          <button
+            class="hdr-btn"
+            style="color: var(--danger); border-color: var(--danger)"
+            onclick="
+              if (confirm('Reset semua data?')) {
+                localStorage.clear();
+                location.reload();
+              }
+            "
+          >
+            Reset
+          </button>
+        </div>
       </div>
-      <div class="flex gap-2 sm:ml-auto">
-        <button class="btn btn-p" onclick="updateStandings()">Update Standings</button>
-        <button class="btn btn-s" onclick="qualifyToR32()">Auto-Fill R32 (1, 2, & Best 3rd)</button>
-      </div>
-    </div>
-    <div id="groups-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-  </section>
+    </header>
 
-  <!-- R32 SECTION -->
-  <section id="sec-r32" class="hidden">
-    <div class="mb-6">
-      <h2 class="font-d text-2xl" style="color:var(--fg)">ROUND OF 32</h2>
-      <p class="text-xs" style="color:var(--muted)">Diisi otomatis dari hasil Group Stage. Masukkan skor untuk melanjutkan ke R16.</p>
-    </div>
-    <div id="r32-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-  </section>
+    <!-- NAVIGATION -->
+    <nav class="max-w-7xl mx-auto px-4 py-3 flex gap-2 overflow-x-auto">
+      <button class="tab on" onclick="openTab('schedule', this)">
+        Schedule
+      </button>
+      <button class="tab" onclick="openTab('groups', this)">Group Stage</button>
+      <button class="tab" onclick="openTab('r32', this)">Round of 32</button>
+      <button class="tab" onclick="openTab('r16', this)">Round of 16</button>
+      <button class="tab" onclick="openTab('qf', this)">QF</button>
+      <button class="tab" onclick="openTab('sf', this)">SF</button>
+      <button class="tab" onclick="openTab('final', this)">Final</button>
+    </nav>
 
-  <!-- R16 SECTION -->
-  <section id="sec-r16" class="hidden">
-    <div class="mb-6"><h2 class="font-d text-2xl" style="color:var(--fg)">ROUND OF 16</h2></div>
-    <div id="r16-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-  </section>
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 pb-12">
+      <!-- SCHEDULE SECTION -->
+      <section id="sec-schedule">
+        <h2 class="font-d text-2xl mb-6" style="color: var(--fg)">
+          MATCH SCHEDULE
+        </h2>
+        <div id="schedule-list"></div>
+      </section>
 
-  <!-- QF SECTION -->
-  <section id="sec-qf" class="hidden">
-    <div class="mb-6"><h2 class="font-d text-2xl" style="color:var(--fg)">QUARTER FINAL</h2></div>
-    <div id="qf-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-  </section>
+      <!-- GROUP STAGE SECTION -->
+      <section id="sec-groups" class="hidden">
+        <div class="flex flex-col sm:flex-row gap-3 mb-6 card">
+          <div>
+            <h2 class="font-d text-2xl" style="color: var(--fg)">
+              GROUP STAGE
+            </h2>
+            <p class="text-xs" style="color: var(--muted)">
+              Rank 1 & 2 lolos otomatis. Rank 3 terbaik (8 tim) lolos ke R32.
+            </p>
+          </div>
+          <div class="flex gap-2 sm:ml-auto">
+            <button class="btn btn-p" onclick="updateStandings()">
+              Update Standings
+            </button>
+            <button class="btn btn-s" onclick="qualifyToR32()">
+              Auto-Fill R32 (1, 2, & Best 3rd)
+            </button>
+          </div>
+        </div>
+        <div
+          id="groups-grid"
+          class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
+        ></div>
+      </section>
 
-  <!-- SF SECTION -->
-  <section id="sec-sf" class="hidden">
-    <div class="mb-6"><h2 class="font-d text-2xl" style="color:var(--fg)">SEMI FINAL</h2></div>
-    <div id="sf-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-  </section>
+      <!-- R32 SECTION -->
+      <section id="sec-r32" class="hidden">
+        <div class="mb-6">
+          <h2 class="font-d text-2xl" style="color: var(--fg)">ROUND OF 32</h2>
+          <p class="text-xs" style="color: var(--muted)">
+            Diisi otomatis dari hasil Group Stage. Masukkan skor untuk
+            melanjutkan ke R16.
+          </p>
+        </div>
+        <div id="r32-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </section>
 
-  <!-- FINAL SECTION -->
-  <section id="sec-final" class="hidden">
-    <div class="mb-6 text-center"><h2 class="font-d text-4xl" style="color:var(--accent)">FINAL MATCH</h2></div>
-    <div id="final-grid" class="max-w-lg mx-auto"></div>
-    <div id="champion-box" class="hidden mt-10 text-center card max-w-lg mx-auto" style="border:2px solid var(--accent)">
-      <p class="text-xs uppercase tracking-widest mb-2" style="color:var(--muted)">World Cup 2026 Champion</p>
-      <h3 id="champ-name" class="font-d text-5xl" style="color:var(--accent)"></h3>
-    </div>
-  </section>
+      <!-- R16 SECTION -->
+      <section id="sec-r16" class="hidden">
+        <div class="mb-6">
+          <h2 class="font-d text-2xl" style="color: var(--fg)">ROUND OF 16</h2>
+        </div>
+        <div id="r16-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </section>
 
-</main>
+      <!-- QF SECTION -->
+      <section id="sec-qf" class="hidden">
+        <div class="mb-6">
+          <h2 class="font-d text-2xl" style="color: var(--fg)">
+            QUARTER FINAL
+          </h2>
+        </div>
+        <div id="qf-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </section>
 
-<script>
-/* ==========================================
+      <!-- SF SECTION -->
+      <section id="sec-sf" class="hidden">
+        <div class="mb-6">
+          <h2 class="font-d text-2xl" style="color: var(--fg)">SEMI FINAL</h2>
+        </div>
+        <div id="sf-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </section>
+
+      <!-- FINAL SECTION -->
+      <section id="sec-final" class="hidden">
+        <div class="mb-6 text-center">
+          <h2 class="font-d text-4xl" style="color: var(--accent)">
+            FINAL MATCH
+          </h2>
+        </div>
+        <div id="final-grid" class="max-w-lg mx-auto"></div>
+        <div
+          id="champion-box"
+          class="hidden mt-10 text-center card max-w-lg mx-auto"
+          style="border: 2px solid var(--accent)"
+        >
+          <p
+            class="text-xs uppercase tracking-widest mb-2"
+            style="color: var(--muted)"
+          >
+            World Cup 2026 Champion
+          </p>
+          <h3
+            id="champ-name"
+            class="font-d text-5xl"
+            style="color: var(--accent)"
+          ></h3>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      /* ==========================================
    DATA & KONSTANTA
    ========================================== */
-const GRP = ["A","B","C","D","E","F","G","H","I","J","K","L"];
-const MAP_CODE = {indonesia:"id",brazil:"br",argentina:"ar",france:"fr",england:"gb-eng",spain:"es",germany:"de",japan:"jp",belgium:"be",portugal:"pt",netherlands:"nl",usa:"us",uruguay:"uy",croatia:"hr",mexico:"mx",poland:"pl",senegal:"sn",morocco:"ma",switzerland:"ch",serbia:"rs",cameroon:"cm",ghana:"gh","saudi arabia":"sa",australia:"au",denmark:"dk",tunisia:"tn",iran:"ir",wales:"gb-wls","costa rica":"cr","south korea":"kr",qatar:"qa",ecuador:"ec",canada:"ca",colombia:"co",peru:"pe",nigeria:"ng",egypt:"eg"};
-const getCode = n => { if(!n) return ""; const k=n.toLowerCase().trim(); if(MAP_CODE[k]) return MAP_CODE[k]; for(const m in MAP_CODE){if(k.includes(m)) return MAP_CODE[m];} return ""; };
-const flagHtml = c => c ? `<img src="https://flagcdn.com/w40/${c}.png" class="flag" alt="">` : `<span class="flag"></span>`;
-const esc = s => (s||"").replace(/'/g, "\\'").replace(/"/g, "&quot;");
+      const GRP = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
+      const MAP_CODE = {
+        indonesia: "id",
+        brazil: "br",
+        argentina: "ar",
+        france: "fr",
+        england: "gb-eng",
+        spain: "es",
+        germany: "de",
+        japan: "jp",
+        belgium: "be",
+        portugal: "pt",
+        netherlands: "nl",
+        usa: "us",
+        uruguay: "uy",
+        croatia: "hr",
+        mexico: "mx",
+        poland: "pl",
+        senegal: "sn",
+        morocco: "ma",
+        switzerland: "ch",
+        serbia: "rs",
+        cameroon: "cm",
+        ghana: "gh",
+        "saudi arabia": "sa",
+        australia: "au",
+        denmark: "dk",
+        tunisia: "tn",
+        iran: "ir",
+        wales: "gb-wls",
+        "costa rica": "cr",
+        "south korea": "kr",
+        qatar: "qa",
+        ecuador: "ec",
+        canada: "ca",
+        colombia: "co",
+        peru: "pe",
+        nigeria: "ng",
+        egypt: "eg",
+      };
+      const getCode = (n) => {
+        if (!n) return "";
+        const k = n.toLowerCase().trim();
+        if (MAP_CODE[k]) return MAP_CODE[k];
+        for (const m in MAP_CODE) {
+          if (k.includes(m)) return MAP_CODE[m];
+        }
+        return "";
+      };
+      const flagHtml = (c) =>
+        c
+          ? `<img src="https://flagcdn.com/w40/${c}.png" class="flag" alt="">`
+          : `<span class="flag"></span>`;
+      const esc = (s) => (s || "").replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
-/* Pemetaan slot R32 */
-const R32_MAP = [
-  {h:["A",2], a:["B",2]}, {h:["E",1], a:["3",0]}, {h:["F",1], a:["C",2]}, {h:["B",1], a:["F",2]},
-  {h:["I",1], a:["3",1]}, {h:["E",2], a:["I",2]}, {h:["A",1], a:["3",2]}, {h:["L",1], a:["3",3]},
-  {h:["D",1], a:["3",4]}, {h:["G",1], a:["3",5]}, {h:["K",2], a:["L",2]},{h:["H",1], a:["J",2]},
-  {h:["C",1], a:["3",6]}, {h:["J",1], a:["H",2]}, {h:["K",1], a:["3",7]}, {h:["D",2], a:["G",2]}
-];
-const R16_MAP = [[1,0,"h"],[4,0,"a"],[0,1,"h"],[2,1,"a"],[3,2,"h"],[5,2,"a"],[7,3,"h"],[6,3,"a"],[10,4,"h"],[11,4,"a"],[8,5,"h"],[9,5,"a"],[13,6,"h"],[15,6,"a"],[12,7,"h"],[14,7,"a"]];
-const QF_MAP = [[0,0,"h"],[1,0,"a"],[4,1,"h"],[5,1,"a"],[2,2,"h"],[3,2,"a"],[6,3,"h"],[7,3,"a"]];
-const SF_MAP = [[0,0,"h"],[1,0,"a"],[2,1,"h"],[3,1,"a"]];
+      /* Pemetaan slot R32 */
+      const R32_MAP = [
+        { h: ["A", 2], a: ["B", 2] },
+        { h: ["E", 1], a: ["3", 0] },
+        { h: ["F", 1], a: ["C", 2] },
+        { h: ["B", 1], a: ["F", 2] },
+        { h: ["I", 1], a: ["3", 1] },
+        { h: ["E", 2], a: ["I", 2] },
+        { h: ["A", 1], a: ["3", 2] },
+        { h: ["L", 1], a: ["3", 3] },
+        { h: ["D", 1], a: ["3", 4] },
+        { h: ["G", 1], a: ["3", 5] },
+        { h: ["K", 2], a: ["L", 2] },
+        { h: ["H", 1], a: ["J", 2] },
+        { h: ["C", 1], a: ["3", 6] },
+        { h: ["J", 1], a: ["H", 2] },
+        { h: ["K", 1], a: ["3", 7] },
+        { h: ["D", 2], a: ["G", 2] },
+      ];
+      const R16_MAP = [
+        [1, 0, "h"],
+        [4, 0, "a"],
+        [0, 1, "h"],
+        [2, 1, "a"],
+        [3, 2, "h"],
+        [5, 2, "a"],
+        [7, 3, "h"],
+        [6, 3, "a"],
+        [10, 4, "h"],
+        [11, 4, "a"],
+        [8, 5, "h"],
+        [9, 5, "a"],
+        [13, 6, "h"],
+        [15, 6, "a"],
+        [12, 7, "h"],
+        [14, 7, "a"],
+      ];
+      const QF_MAP = [
+        [0, 0, "h"],
+        [1, 0, "a"],
+        [4, 1, "h"],
+        [5, 1, "a"],
+        [2, 2, "h"],
+        [3, 2, "a"],
+        [6, 3, "h"],
+        [7, 3, "a"],
+      ];
+      const SF_MAP = [
+        [0, 0, "h"],
+        [1, 0, "a"],
+        [2, 1, "h"],
+        [3, 1, "a"],
+      ];
 
-let S;
+      let S;
 
-/* ==========================================
+      /* ==========================================
    INISIALISASI STATE
    ========================================== */
-function createState() {
-  S = { groups:{}, matches:{groups:{}, r32:[], r16:[], qf:[], sf:[], final:[]}, standings:{}, bestThirds:[] };
-  GRP.forEach(g => {
-    S.groups[g] = [{n:"Team 1",c:""},{n:"Team 2",c:""},{n:"Team 3",c:""},{n:"Team 4",c:""}];
-    S.standings[g] = [{t:"Team 1",p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0},{t:"Team 2",p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0},{t:"Team 3",p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0},{t:"Team 4",p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0}];
-    S.matches.groups[g] = [
-      {hi:0,ai:1,hs:null,as:null,hsc:[],asc:[],dt:"",tm:"",st:""},
-      {hi:2,ai:3,hs:null,as:null,hsc:[],asc:[],dt:"",tm:"",st:""},
-      {hi:0,ai:2,hs:null,as:null,hsc:[],asc:[],dt:"",tm:"",st:""},
-      {hi:3,ai:1,hs:null,as:null,hsc:[],asc:[],dt:"",tm:"",st:""},
-      {hi:3,ai:0,hs:null,as:null,hsc:[],asc:[],dt:"",tm:"",st:""},
-      {hi:1,ai:2,hs:null,as:null,hsc:[],asc:[],dt:"",tm:"",st:""}
-    ];
-  });
-  const mk = (r,d) => ({r,d,h:null,a:null,hs:null,as:null,hp:null,ap:null,hsc:[],asc:[],dt:"",tm:"",st:""});
-  const r32desc = ["A-2 vs B-2","E-1 vs 3rd","F-1 vs C-2","B-1 vs F-2","I-1 vs 3rd","E-2 vs I-2","A-1 vs 3rd","L-1 vs 3rd","D-1 vs 3rd","G-1 vs 3rd","K-2 vs L-2","H-1 vs J-2","C-1 vs 3rd","J-1 vs H-2","K-1 vs 3rd","D-2 vs G-2"];
-  S.matches.r32 = ["M73","M74","M75","M76","M77","M78","M79","M80","M81","M82","M83","M84","M85","M86","M87","M88"].map((r,i)=>mk(r, r32desc[i]));
-  S.matches.r16 = ["M89","M90","M91","M92","M93","M94","M95","M96"].map((r,i)=>mk(r,`W M${[74,77,73,75,76,78,79,80,83,84,81,82,86,88,85,87][i*2]} vs W M${[74,77,73,75,76,78,79,80,83,84,81,82,86,88,85,87][i*2+1]}`));
-  S.matches.qf = ["M97","M98","M99","M100"].map((r,i)=>mk(r,`W M${89+i} vs W M${91+i}`));
-  S.matches.sf = ["M101","M102"].map((r,i)=>mk(r,`SF ${i+1}`));
-  S.matches.final = [mk("M103","FINAL")];
-}
+      function createState() {
+        S = {
+          groups: {},
+          matches: { groups: {}, r32: [], r16: [], qf: [], sf: [], final: [] },
+          standings: {},
+          bestThirds: [],
+        };
+        GRP.forEach((g) => {
+          S.groups[g] = [
+            { n: "Team 1", c: "" },
+            { n: "Team 2", c: "" },
+            { n: "Team 3", c: "" },
+            { n: "Team 4", c: "" },
+          ];
+          S.standings[g] = [
+            { t: "Team 1", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 },
+            { t: "Team 2", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 },
+            { t: "Team 3", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 },
+            { t: "Team 4", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 },
+          ];
+          S.matches.groups[g] = [
+            {
+              hi: 0,
+              ai: 1,
+              hs: null,
+              as: null,
+              hsc: [],
+              asc: [],
+              dt: "",
+              tm: "",
+              st: "",
+            },
+            {
+              hi: 2,
+              ai: 3,
+              hs: null,
+              as: null,
+              hsc: [],
+              asc: [],
+              dt: "",
+              tm: "",
+              st: "",
+            },
+            {
+              hi: 0,
+              ai: 2,
+              hs: null,
+              as: null,
+              hsc: [],
+              asc: [],
+              dt: "",
+              tm: "",
+              st: "",
+            },
+            {
+              hi: 3,
+              ai: 1,
+              hs: null,
+              as: null,
+              hsc: [],
+              asc: [],
+              dt: "",
+              tm: "",
+              st: "",
+            },
+            {
+              hi: 3,
+              ai: 0,
+              hs: null,
+              as: null,
+              hsc: [],
+              asc: [],
+              dt: "",
+              tm: "",
+              st: "",
+            },
+            {
+              hi: 1,
+              ai: 2,
+              hs: null,
+              as: null,
+              hsc: [],
+              asc: [],
+              dt: "",
+              tm: "",
+              st: "",
+            },
+          ];
+        });
+        const mk = (r, d) => ({
+          r,
+          d,
+          h: null,
+          a: null,
+          hs: null,
+          as: null,
+          hp: null,
+          ap: null,
+          hsc: [],
+          asc: [],
+          dt: "",
+          tm: "",
+          st: "",
+        });
+        const r32desc = [
+          "A-2 vs B-2",
+          "E-1 vs 3rd",
+          "F-1 vs C-2",
+          "B-1 vs F-2",
+          "I-1 vs 3rd",
+          "E-2 vs I-2",
+          "A-1 vs 3rd",
+          "L-1 vs 3rd",
+          "D-1 vs 3rd",
+          "G-1 vs 3rd",
+          "K-2 vs L-2",
+          "H-1 vs J-2",
+          "C-1 vs 3rd",
+          "J-1 vs H-2",
+          "K-1 vs 3rd",
+          "D-2 vs G-2",
+        ];
+        S.matches.r32 = [
+          "M73",
+          "M74",
+          "M75",
+          "M76",
+          "M77",
+          "M78",
+          "M79",
+          "M80",
+          "M81",
+          "M82",
+          "M83",
+          "M84",
+          "M85",
+          "M86",
+          "M87",
+          "M88",
+        ].map((r, i) => mk(r, r32desc[i]));
+        S.matches.r16 = [
+          "M89",
+          "M90",
+          "M91",
+          "M92",
+          "M93",
+          "M94",
+          "M95",
+          "M96",
+        ].map((r, i) =>
+          mk(
+            r,
+            `W M${[74, 77, 73, 75, 76, 78, 79, 80, 83, 84, 81, 82, 86, 88, 85, 87][i * 2]} vs W M${[74, 77, 73, 75, 76, 78, 79, 80, 83, 84, 81, 82, 86, 88, 85, 87][i * 2 + 1]}`,
+          ),
+        );
+        S.matches.qf = ["M97", "M98", "M99", "M100"].map((r, i) =>
+          mk(r, `W M${89 + i} vs W M${91 + i}`),
+        );
+        S.matches.sf = ["M101", "M102"].map((r, i) => mk(r, `SF ${i + 1}`));
+        S.matches.final = [mk("M103", "FINAL")];
+      }
 
-/* ==========================================
+      /* ==========================================
    SAVE, LOAD, EXPORT, IMPORT
    ========================================== */
-function saveLocal() {
-  try { localStorage.setItem("wc2026", JSON.stringify(S)); } catch(e) { console.error(e); }
-}
-function loadLocal() {
-  try { const d = localStorage.getItem("wc2026"); if(d) { S = JSON.parse(d); return true; } } catch(e) {}
-  return false;
-}
-function handleSave() {
-  calcStandings();
-  saveLocal();
-  const t = document.getElementById("toast");
-  t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 2000);
-}
-function exportData() {
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 2)], {type:"application/json"}));
-  a.download = "wc2026_data.json"; a.click();
-}
-function importData(e) {
-  const f = e.target.files[0]; if(!f) return;
-  const r = new FileReader();
-  r.onload = ev => { try { S = JSON.parse(ev.target.result); saveLocal(); renderAll(); alert("Import Berhasil!"); } catch(err) { alert("File error"); } };
-  r.readAsText(f); e.target.value = "";
-}
+      function saveLocal() {
+        try {
+          localStorage.setItem("wc2026", JSON.stringify(S));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      function loadLocal() {
+        try {
+          const d = localStorage.getItem("wc2026");
+          if (d) {
+            S = JSON.parse(d);
+            return true;
+          }
+        } catch (e) {}
+        return false;
+      }
+      function handleSave() {
+        calcStandings();
+        saveLocal();
+        const t = document.getElementById("toast");
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 2000);
+      }
+      function exportData() {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(
+          new Blob([JSON.stringify(S, null, 2)], { type: "application/json" }),
+        );
+        a.download = "wc2026_data.json";
+        a.click();
+      }
+      function importData(e) {
+        const f = e.target.files[0];
+        if (!f) return;
+        const r = new FileReader();
+        r.onload = (ev) => {
+          try {
+            S = JSON.parse(ev.target.result);
+            saveLocal();
+            renderAll();
+            alert("Import Berhasil!");
+          } catch (err) {
+            alert("File error");
+          }
+        };
+        r.readAsText(f);
+        e.target.value = "";
+      }
 
-/* ==========================================
+      /* ==========================================
    NAVIGASI TAB
    ========================================== */
-function openTab(id, btn) {
-  document.querySelectorAll("main > section").forEach(s => s.classList.add("hidden"));
-  document.getElementById("sec-"+id).classList.remove("hidden");
-  document.querySelectorAll(".tab").forEach(b => b.classList.remove("on"));
-  if(btn) btn.classList.add("on");
-  if(id==="schedule") renderSchedule();
-}
+      function openTab(id, btn) {
+        document
+          .querySelectorAll("main > section")
+          .forEach((s) => s.classList.add("hidden"));
+        document.getElementById("sec-" + id).classList.remove("hidden");
+        document
+          .querySelectorAll(".tab")
+          .forEach((b) => b.classList.remove("on"));
+        if (btn) btn.classList.add("on");
+        if (id === "schedule") renderSchedule();
+      }
 
-/* ==========================================
+      /* ==========================================
    LOGIKA KLASEMEN
    ========================================== */
-function calcStandings() {
-  GRP.forEach(g => {
-    const teams = S.groups[g];
-    const stats = {};
-    teams.forEach(t => stats[t.n] = {t:t.n, p:0, w:0, d:0, l:0, gf:0, ga:0, pts:0});
-    S.matches.groups[g].forEach(m => {
-      const hn = teams[m.hi].n, an = teams[m.ai].n;
-      if(m.hs === null || m.as === null) return;
-      const h = parseInt(m.hs), a = parseInt(m.as);
-      stats[hn].p++; stats[an].p++;
-      stats[hn].gf += h; stats[hn].ga += a;
-      stats[an].gf += a; stats[an].ga += h;
-      if(h > a) { stats[hn].w++; stats[hn].pts += 3; stats[an].l++; }
-      else if(h < a) { stats[an].w++; stats[an].pts += 3; stats[hn].l++; }
-      else { stats[hn].d++; stats[an].d++; stats[hn].pts++; stats[an].pts++; }
-    });
-    S.standings[g] = Object.values(stats).sort((a,b) => b.pts - a.pts || (b.gf-b.ga) - (a.gf-a.ga) || b.gf - a.gf || a.t.localeCompare(b.t));
-  });
-}
+      function calcStandings() {
+        GRP.forEach((g) => {
+          const teams = S.groups[g];
+          const stats = {};
+          teams.forEach(
+            (t) =>
+              (stats[t.n] = {
+                t: t.n,
+                p: 0,
+                w: 0,
+                d: 0,
+                l: 0,
+                gf: 0,
+                ga: 0,
+                pts: 0,
+              }),
+          );
+          S.matches.groups[g].forEach((m) => {
+            const hn = teams[m.hi].n,
+              an = teams[m.ai].n;
+            if (m.hs === null || m.as === null) return;
+            const h = parseInt(m.hs),
+              a = parseInt(m.as);
+            stats[hn].p++;
+            stats[an].p++;
+            stats[hn].gf += h;
+            stats[hn].ga += a;
+            stats[an].gf += a;
+            stats[an].ga += h;
+            if (h > a) {
+              stats[hn].w++;
+              stats[hn].pts += 3;
+              stats[an].l++;
+            } else if (h < a) {
+              stats[an].w++;
+              stats[an].pts += 3;
+              stats[hn].l++;
+            } else {
+              stats[hn].d++;
+              stats[an].d++;
+              stats[hn].pts++;
+              stats[an].pts++;
+            }
+          });
+          S.standings[g] = Object.values(stats).sort(
+            (a, b) =>
+              b.pts - a.pts ||
+              b.gf - b.ga - (a.gf - a.ga) ||
+              b.gf - a.gf ||
+              a.t.localeCompare(b.t),
+          );
+        });
+      }
 
-/* ==========================================
+      /* ==========================================
    KUALIFIKASI KE R32
    ========================================== */
-function updateStandings() {
-  calcStandings();
-  saveLocal();
-  renderGroups();
-  handleSave();
-}
-
-function qualifyToR32() {
-  calcStandings();
-  let thirds = [];
-  GRP.forEach(g => {
-    if(S.standings[g][2]) {
-      const t = S.standings[g][2];
-      thirds.push({ g, n: t.t, pts: t.pts, gd: t.gf-t.ga, gf: t.gf });
-    }
-  });
-  thirds.sort((a,b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf || a.n.localeCompare(b.n));
-  S.bestThirds = thirds.slice(0, 8);
-  
-  R32_MAP.forEach((slot, i) => {
-    const m = S.matches.r32[i];
-    if(slot.h[0] === "3") {
-      const bt = S.bestThirds[slot.h[1]];
-      m.h = bt ? {n: bt.n, c: getCode(bt.n)} : null;
-    } else {
-      const rIdx = slot.h[1] - 1;
-      if(S.standings[slot.h[0]] && S.standings[slot.h[0]][rIdx]) {
-        const t = S.standings[slot.h[0]][rIdx];
-        m.h = {n: t.t, c: getCode(t.t)};
+      function updateStandings() {
+        calcStandings();
+        saveLocal();
+        renderGroups();
+        handleSave();
       }
-    }
-    if(slot.a[0] === "3") {
-      const bt = S.bestThirds[slot.a[1]];
-      m.a = bt ? {n: bt.n, c: getCode(bt.n)} : null;
-    } else {
-      const rIdx = slot.a[1] - 1;
-      if(S.standings[slot.a[0]] && S.standings[slot.a[0]][rIdx]) {
-        const t = S.standings[slot.a[0]][rIdx];
-        m.a = {n: t.t, c: getCode(t.t)};
-      }
-    }
-  });
-  saveLocal();
-  renderAll();
-  handleSave();
-  alert("R32 berhasil diisi otomatis! Silakan cek tab 'Round of 32'.");
-}
 
-/* ==========================================
+      function qualifyToR32() {
+        calcStandings();
+        let thirds = [];
+        GRP.forEach((g) => {
+          if (S.standings[g][2]) {
+            const t = S.standings[g][2];
+            thirds.push({ g, n: t.t, pts: t.pts, gd: t.gf - t.ga, gf: t.gf });
+          }
+        });
+        thirds.sort(
+          (a, b) =>
+            b.pts - a.pts ||
+            b.gd - a.gd ||
+            b.gf - a.gf ||
+            a.n.localeCompare(b.n),
+        );
+        S.bestThirds = thirds.slice(0, 8);
+
+        R32_MAP.forEach((slot, i) => {
+          const m = S.matches.r32[i];
+          if (slot.h[0] === "3") {
+            const bt = S.bestThirds[slot.h[1]];
+            m.h = bt ? { n: bt.n, c: getCode(bt.n) } : null;
+          } else {
+            const rIdx = slot.h[1] - 1;
+            if (S.standings[slot.h[0]] && S.standings[slot.h[0]][rIdx]) {
+              const t = S.standings[slot.h[0]][rIdx];
+              m.h = { n: t.t, c: getCode(t.t) };
+            }
+          }
+          if (slot.a[0] === "3") {
+            const bt = S.bestThirds[slot.a[1]];
+            m.a = bt ? { n: bt.n, c: getCode(bt.n) } : null;
+          } else {
+            const rIdx = slot.a[1] - 1;
+            if (S.standings[slot.a[0]] && S.standings[slot.a[0]][rIdx]) {
+              const t = S.standings[slot.a[0]][rIdx];
+              m.a = { n: t.t, c: getCode(t.t) };
+            }
+          }
+        });
+        saveLocal();
+        renderAll();
+        handleSave();
+        alert("R32 berhasil diisi otomatis! Silakan cek tab 'Round of 32'.");
+      }
+
+      /* ==========================================
    PROPAGASI FASE KNOCKOUT
    ========================================== */
-function getWinner(m) {
-  if(!m || m.hs===null || m.as===null) return null;
-  const h=parseInt(m.hs), a=parseInt(m.as);
-  if(h===a) { if(m.hp!==null && m.ap!==null) return parseInt(m.hp)>parseInt(m.ap) ? m.h : m.a; return null; }
-  return h>a ? m.h : m.a;
-}
-function advance(stage) {
-  if(stage==="r32") { R16_MAP.forEach(([s,t,side]) => { const w=getWinner(S.matches.r32[s]); if(w && S.matches.r16[t][side+"s"]===null) S.matches.r16[t][side]=w; }); }
-  else if(stage==="r16") { QF_MAP.forEach(([s,t,side]) => { const w=getWinner(S.matches.r16[s]); if(w && S.matches.qf[t][side+"s"]===null) S.matches.qf[t][side]=w; }); }
-  else if(stage==="qf") { SF_MAP.forEach(([s,t,side]) => { const w=getWinner(S.matches.qf[s]); if(w && S.matches.sf[t][side+"s"]===null) S.matches.sf[t][side]=w; }); }
-  else if(stage==="sf") {
-    const w1=getWinner(S.matches.sf[0]), w2=getWinner(S.matches.sf[1]);
-    if(w1 && S.matches.final[0].hs===null) S.matches.final[0].h=w1;
-    if(w2 && S.matches.final[0].as===null) S.matches.final[0].a=w2;
-  }
-}
+      function getWinner(m) {
+        if (!m || m.hs === null || m.as === null) return null;
+        const h = parseInt(m.hs),
+          a = parseInt(m.as);
+        if (h === a) {
+          if (m.hp !== null && m.ap !== null)
+            return parseInt(m.hp) > parseInt(m.ap) ? m.h : m.a;
+          return null;
+        }
+        return h > a ? m.h : m.a;
+      }
+      function advance(stage) {
+        if (stage === "r32") {
+          R16_MAP.forEach(([s, t, side]) => {
+            const w = getWinner(S.matches.r32[s]);
+            if (w && S.matches.r16[t][side + "s"] === null)
+              S.matches.r16[t][side] = w;
+          });
+        } else if (stage === "r16") {
+          QF_MAP.forEach(([s, t, side]) => {
+            const w = getWinner(S.matches.r16[s]);
+            if (w && S.matches.qf[t][side + "s"] === null)
+              S.matches.qf[t][side] = w;
+          });
+        } else if (stage === "qf") {
+          SF_MAP.forEach(([s, t, side]) => {
+            const w = getWinner(S.matches.qf[s]);
+            if (w && S.matches.sf[t][side + "s"] === null)
+              S.matches.sf[t][side] = w;
+          });
+        } else if (stage === "sf") {
+          const w1 = getWinner(S.matches.sf[0]),
+            w2 = getWinner(S.matches.sf[1]);
+          if (w1 && S.matches.final[0].hs === null) S.matches.final[0].h = w1;
+          if (w2 && S.matches.final[0].as === null) S.matches.final[0].a = w2;
+        }
+      }
 
-/* ==========================================
+      /* ==========================================
    EVENT HANDLERS
    ========================================== */
-function setScore(stage, g, i, side, val) {
-  let m = stage==="groups" ? S.matches.groups[g][i] : S.matches[stage][i];
-  m[side+"s"] = val==="" ? null : parseInt(val);
-  if(stage!=="groups") advance(stage);
-  saveLocal(); renderAll();
-}
-function setPen(stage, i, side, val) {
-  S.matches[stage][i][side+"p"] = val==="" ? null : parseInt(val);
-  advance(stage);
-  saveLocal(); renderAll();
-}
-function setTeam(g, i, val) {
-  const old = S.groups[g][i].n;
-  S.groups[g][i].n = val; S.groups[g][i].c = getCode(val);
-  const st = S.standings[g].find(s => s.t===old); if(st) st.t = val;
-  saveLocal(); renderGroups();
-}
-function setSch(stage, g, i, fld, val) {
-  let m = stage==="groups" ? S.matches.groups[g][i] : S.matches[stage][i];
-  m[fld] = val; saveLocal();
-}
-function addSc(stage, g, i, side) {
-  const inp = event.target.previousElementSibling;
-  if(!inp || !inp.value.trim()) return;
-  let m = stage==="groups" ? S.matches.groups[g][i] : S.matches[stage][i];
-  m[side+"sc"].push(inp.value.trim());
-  inp.value = ""; saveLocal(); renderAll();
-}
-function remSc(stage, g, i, side, name) {
-  let m = stage==="groups" ? S.matches.groups[g][i] : S.matches[stage][i];
-  m[side+"sc"] = m[side+"sc"].filter(s => s !== name);
-  saveLocal(); renderAll();
-}
+      function setScore(stage, g, i, side, val) {
+        let m =
+          stage === "groups" ? S.matches.groups[g][i] : S.matches[stage][i];
+        m[side + "s"] = val === "" ? null : parseInt(val);
+        if (stage !== "groups") advance(stage);
+        saveLocal();
+        renderAll();
+      }
+      function setPen(stage, i, side, val) {
+        S.matches[stage][i][side + "p"] = val === "" ? null : parseInt(val);
+        advance(stage);
+        saveLocal();
+        renderAll();
+      }
+      function setTeam(g, i, val) {
+        const old = S.groups[g][i].n;
+        S.groups[g][i].n = val;
+        S.groups[g][i].c = getCode(val);
+        const st = S.standings[g].find((s) => s.t === old);
+        if (st) st.t = val;
+        saveLocal();
+        renderGroups();
+      }
+      function setSch(stage, g, i, fld, val) {
+        let m =
+          stage === "groups" ? S.matches.groups[g][i] : S.matches[stage][i];
+        m[fld] = val;
+        saveLocal();
+      }
+      function addSc(stage, g, i, side) {
+        const inp = event.target.previousElementSibling;
+        if (!inp || !inp.value.trim()) return;
+        let m =
+          stage === "groups" ? S.matches.groups[g][i] : S.matches[stage][i];
+        m[side + "sc"].push(inp.value.trim());
+        inp.value = "";
+        saveLocal();
+        renderAll();
+      }
+      function remSc(stage, g, i, side, name) {
+        let m =
+          stage === "groups" ? S.matches.groups[g][i] : S.matches[stage][i];
+        m[side + "sc"] = m[side + "sc"].filter((s) => s !== name);
+        saveLocal();
+        renderAll();
+      }
 
-/* ==========================================
+      /* ==========================================
    RENDER SCHEDULE (YANG TADI HILANG)
    ========================================== */
-function renderSchedule() {
-  const all = [];
-  // Kumpulkan semua pertandingan
-  GRP.forEach(g => {
-    S.matches.groups[g].forEach((m, i) => {
-      const t = S.groups[g];
-      all.push({ num: "M"+((GRP.indexOf(g)*6)+i+1), hn: t[m.hi].n, an: t[m.ai].n, hs: m.hs, as: m.as, dt: m.dt, tm: m.tm, st: m.st, r: "Group "+g });
-    });
-  });
-  ["r32","r16","qf","sf","final"].forEach(stage => {
-    S.matches[stage].forEach(m => {
-      all.push({ num: m.r, hn: m.h ? m.h.n : "TBD", an: m.a ? m.a.n : "TBD", hs: m.hs, as: m.as, dt: m.dt, tm: m.tm, st: m.st, r: stage.toUpperCase() });
-    });
-  });
+      function renderSchedule() {
+        const all = [];
+        // Kumpulkan semua pertandingan
+        GRP.forEach((g) => {
+          S.matches.groups[g].forEach((m, i) => {
+            const t = S.groups[g];
+            all.push({
+              num: "M" + (GRP.indexOf(g) * 6 + i + 1),
+              hn: t[m.hi].n,
+              an: t[m.ai].n,
+              hs: m.hs,
+              as: m.as,
+              dt: m.dt,
+              tm: m.tm,
+              st: m.st,
+              r: "Group " + g,
+            });
+          });
+        });
+        ["r32", "r16", "qf", "sf", "final"].forEach((stage) => {
+          S.matches[stage].forEach((m) => {
+            all.push({
+              num: m.r,
+              hn: m.h ? m.h.n : "TBD",
+              an: m.a ? m.a.n : "TBD",
+              hs: m.hs,
+              as: m.as,
+              dt: m.dt,
+              tm: m.tm,
+              st: m.st,
+              r: stage.toUpperCase(),
+            });
+          });
+        });
 
-  // Pisahkan yang sudah ada tanggal dan yang belum
-  const withDate = all.filter(m => m.dt).sort((a,b) => a.dt.localeCompare(b.dt) || (a.tm||"").localeCompare(b.tm||""));
-  const withoutDate = all.filter(m => !m.dt);
+        // Pisahkan yang sudah ada tanggal dan yang belum
+        const withDate = all
+          .filter((m) => m.dt)
+          .sort(
+            (a, b) =>
+              a.dt.localeCompare(b.dt) ||
+              (a.tm || "").localeCompare(b.tm || ""),
+          );
+        const withoutDate = all.filter((m) => !m.dt);
 
-  const makeCard = m => `
+        const makeCard = (m) => `
     <div class="sch-card">
       <div class="font-bold text-xs w-16 shrink-0" style="color:var(--accent)">${m.num}</div>
-      <div class="text-xs w-24 shrink-0" style="color:var(--muted)">${m.dt||""} ${m.tm||""}</div>
+      <div class="text-xs w-24 shrink-0" style="color:var(--muted)">${m.dt || ""} ${m.tm || ""}</div>
       <div class="flex-1 flex items-center justify-center gap-2 text-sm">
         <span class="font-semibold text-right flex-1 truncate">${m.hn}</span>
-        <span class="px-2" style="color:var(--muted)">${m.hs!==null?m.hs:"-"} - ${m.as!==null?m.as:"-"}</span>
+        <span class="px-2" style="color:var(--muted)">${m.hs !== null ? m.hs : "-"} - ${m.as !== null ? m.as : "-"}</span>
         <span class="font-semibold text-left flex-1 truncate">${m.an}</span>
       </div>
-      <div class="text-xs w-28 shrink-0 truncate" style="color:var(--muted)">${m.st||""}</div>
+      <div class="text-xs w-28 shrink-0 truncate" style="color:var(--muted)">${m.st || ""}</div>
     </div>`;
 
-  let html = "";
-  if(withDate.length) {
-    html += `<h3 class="font-d text-lg mb-3" style="color:var(--fg)">Scheduled Matches</h3>` + withDate.map(makeCard).join("");
-  }
-  if(withoutDate.length) {
-    html += `<h3 class="font-d text-lg mt-6 mb-3" style="color:var(--muted)">Unscheduled Matches</h3>` + withoutDate.map(makeCard).join("");
-  }
-  if(!all.length) {
-    html = `<p class="text-center py-8" style="color:var(--muted)">Belum ada pertandingan.</p>`;
-  }
-  document.getElementById("schedule-list").innerHTML = html;
-}
+        let html = "";
+        if (withDate.length) {
+          html +=
+            `<h3 class="font-d text-lg mb-3" style="color:var(--fg)">Scheduled Matches</h3>` +
+            withDate.map(makeCard).join("");
+        }
+        if (withoutDate.length) {
+          html +=
+            `<h3 class="font-d text-lg mt-6 mb-3" style="color:var(--muted)">Unscheduled Matches</h3>` +
+            withoutDate.map(makeCard).join("");
+        }
+        if (!all.length) {
+          html = `<p class="text-center py-8" style="color:var(--muted)">Belum ada pertandingan.</p>`;
+        }
+        document.getElementById("schedule-list").innerHTML = html;
+      }
 
-/* ==========================================
+      /* ==========================================
    RENDER GROUPS
    ========================================== */
-function renderGroups() {
-  const bestG = S.bestThirds.map(b => b.g);
-  document.getElementById("groups-grid").innerHTML = GRP.map(g => {
-    const t = S.groups[g], st = S.standings[g], m = S.matches.groups[g];
-    let teamInputs = `<div class="grid grid-cols-2 gap-2 mb-3">` + t.map((tm,i) => `<div class="flex items-center gap-1 bg-black/20 rounded p-1">${flagHtml(tm.c)}<input class="inp flex-1" value="${esc(tm.n)}" onchange="setTeam('${g}',${i},this.value)"></div>`).join("") + `</div>`;
-    let matches = m.map((mt, mi) => {
-      const h = t[mt.hi], a = t[mt.ai];
-      return `<div class="match-box">
+      function renderGroups() {
+        const bestG = S.bestThirds.map((b) => b.g);
+        document.getElementById("groups-grid").innerHTML = GRP.map((g) => {
+          const t = S.groups[g],
+            st = S.standings[g],
+            m = S.matches.groups[g];
+          let teamInputs =
+            `<div class="grid grid-cols-2 gap-2 mb-3">` +
+            t
+              .map(
+                (tm, i) =>
+                  `<div class="flex items-center gap-1 bg-black/20 rounded p-1">${flagHtml(tm.c)}<input class="inp flex-1" value="${esc(tm.n)}" onchange="setTeam('${g}',${i},this.value)"></div>`,
+              )
+              .join("") +
+            `</div>`;
+          let matches = m
+            .map((mt, mi) => {
+              const h = t[mt.hi],
+                a = t[mt.ai];
+              return `<div class="match-box">
         <div class="flex justify-between items-center mb-1 text-xs" style="color:var(--muted)">
-          <span class="font-bold">M${mi+1}</span>
+          <span class="font-bold">M${mi + 1}</span>
           <div class="flex gap-1"><input type="date" class="inp" style="width:110px;font-size:0.65rem" value="${mt.dt}" onchange="setSch('groups','${g}',${mi},'dt',this.value)"><input type="time" class="inp" style="width:70px;font-size:0.65rem" value="${mt.tm}" onchange="setSch('groups','${g}',${mi},'tm',this.value)"></div>
         </div>
-        <input class="inp w-full mb-2" style="font-size:0.65rem" placeholder="Stadium" value="${mt.st||""}" onchange="setSch('groups','${g}',${mi},'st',this.value)">
+        <input class="inp w-full mb-2" style="font-size:0.65rem" placeholder="Stadium" value="${mt.st || ""}" onchange="setSch('groups','${g}',${mi},'st',this.value)">
         <div class="flex items-center gap-2 mb-1">
           <div class="flex-1 text-right font-semibold text-xs truncate">${h.n}</div>${flagHtml(h.c)}
-          <input type="number" class="inp-score" value="${mt.hs!==null?mt.hs:''}" onchange="setScore('groups','${g}',${mi},'h',this.value)">
+          <input type="number" class="inp-score" value="${mt.hs !== null ? mt.hs : ""}" onchange="setScore('groups','${g}',${mi},'h',this.value)">
           <span style="color:var(--muted)">-</span>
-          <input type="number" class="inp-score" value="${mt.as!==null?mt.as:''}" onchange="setScore('groups','${g}',${mi},'a',this.value)">
+          <input type="number" class="inp-score" value="${mt.as !== null ? mt.as : ""}" onchange="setScore('groups','${g}',${mi},'a',this.value)">
           ${flagHtml(a.c)}<div class="flex-1 font-semibold text-xs truncate">${a.n}</div>
         </div>
         <div class="flex gap-2 mt-1 text-xs" style="border-top:1px dashed var(--border);padding-top:4px">
-          <div class="flex-1 flex flex-wrap">${mt.hsc.map(s=>`<span class="scorer-tag">${s} <button onclick="remSc('groups','${g}',${mi},'h','${esc(s)}')">&times;</button></span>`).join("")}<div class="flex gap-1 mt-1"><input class="inp" style="width:80px;font-size:0.65rem" placeholder="Scorer" onkeypress="if(event.key==='Enter')addSc('groups','${g}',${mi},'h')"><button class="btn" style="padding:2px 6px;font-size:0.6rem;background:var(--secondary);color:#fff" onclick="addSc('groups','${g}',${mi},'h')">+</button></div></div>
-          <div class="flex-1 flex flex-wrap justify-end">${mt.asc.map(s=>`<span class="scorer-tag">${s} <button onclick="remSc('groups','${g}',${mi},'a','${esc(s)}')">&times;</button></span>`).join("")}<div class="flex gap-1 mt-1"><input class="inp" style="width:80px;font-size:0.65rem" placeholder="Scorer" onkeypress="if(event.key==='Enter')addSc('groups','${g}',${mi},'a')"><button class="btn" style="padding:2px 6px;font-size:0.6rem;background:var(--secondary);color:#fff" onclick="addSc('groups','${g}',${mi},'a')">+</button></div></div>
+          <div class="flex-1 flex flex-wrap">${mt.hsc.map((s) => `<span class="scorer-tag">${s} <button onclick="remSc('groups','${g}',${mi},'h','${esc(s)}')">&times;</button></span>`).join("")}<div class="flex gap-1 mt-1"><input class="inp" style="width:80px;font-size:0.65rem" placeholder="Scorer" onkeypress="if(event.key==='Enter')addSc('groups','${g}',${mi},'h')"><button class="btn" style="padding:2px 6px;font-size:0.6rem;background:var(--secondary);color:#fff" onclick="addSc('groups','${g}',${mi},'h')">+</button></div></div>
+          <div class="flex-1 flex flex-wrap justify-end">${mt.asc.map((s) => `<span class="scorer-tag">${s} <button onclick="remSc('groups','${g}',${mi},'a','${esc(s)}')">&times;</button></span>`).join("")}<div class="flex gap-1 mt-1"><input class="inp" style="width:80px;font-size:0.65rem" placeholder="Scorer" onkeypress="if(event.key==='Enter')addSc('groups','${g}',${mi},'a')"><button class="btn" style="padding:2px 6px;font-size:0.6rem;background:var(--secondary);color:#fff" onclick="addSc('groups','${g}',${mi},'a')">+</button></div></div>
         </div>
       </div>`;
-    }).join("");
-    let table = `<div class="s-row s-hdr mt-2"><span>#</span><span>Team</span><span class="text-center">P</span><span class="text-center">W</span><span class="text-center">D</span><span class="text-center">L</span><span class="text-center">GF</span><span class="text-center">GA</span><span class="text-center">GD</span><span class="text-center">Pts</span></div>` +
-    st.map((s, i) => {
-      const gd = s.gf - s.ga, gdTxt = gd > 0 ? `+${gd}` : gd;
-      const cls = i < 2 ? "s-q" : (i===2 && bestG.includes(g) ? "s-tq" : "");
-      const numClr = i<2 ? "color:var(--success)" : (i===2 && bestG.includes(g) ? "color:var(--secondary)" : "color:var(--muted)");
-      return `<div class="s-row ${cls}"><span class="font-bold" style="${numClr};font-size:0.65rem">${i+1}</span><div class="truncate flex items-center gap-1">${flagHtml(getCode(s.t))}<span class="font-semibold truncate" style="font-size:0.65rem">${s.t}</span></div><span class="text-center">${s.p}</span><span class="text-center">${s.w}</span><span class="text-center">${s.d}</span><span class="text-center">${s.l}</span><span class="text-center">${s.gf}</span><span class="text-center">${s.ga}</span><span class="text-center font-semibold" style="${gd>0?'color:var(--success)':gd<0?'color:var(--danger)':''}">${gdTxt}</span><span class="text-center font-bold" style="${i<2?'color:var(--accent)':''}">${s.pts}</span></div>`;
-    }).join("");
-    return `<div class="card"><div class="flex items-center mb-3 pb-2" style="border-bottom:1px solid var(--border)"><span class="font-bold px-3 py-1 rounded text-xs" style="background:var(--accent);color:#000">GROUP ${g}</span></div>${teamInputs}${matches}${table}</div>`;
-  }).join("");
-}
+            })
+            .join("");
+          let table =
+            `<div class="s-row s-hdr mt-2"><span>#</span><span>Team</span><span class="text-center">P</span><span class="text-center">W</span><span class="text-center">D</span><span class="text-center">L</span><span class="text-center">GF</span><span class="text-center">GA</span><span class="text-center">GD</span><span class="text-center">Pts</span></div>` +
+            st
+              .map((s, i) => {
+                const gd = s.gf - s.ga,
+                  gdTxt = gd > 0 ? `+${gd}` : gd;
+                const cls =
+                  i < 2 ? "s-q" : i === 2 && bestG.includes(g) ? "s-tq" : "";
+                const numClr =
+                  i < 2
+                    ? "color:var(--success)"
+                    : i === 2 && bestG.includes(g)
+                      ? "color:var(--secondary)"
+                      : "color:var(--muted)";
+                return `<div class="s-row ${cls}"><span class="font-bold" style="${numClr};font-size:0.65rem">${i + 1}</span><div class="truncate flex items-center gap-1">${flagHtml(getCode(s.t))}<span class="font-semibold truncate" style="font-size:0.65rem">${s.t}</span></div><span class="text-center">${s.p}</span><span class="text-center">${s.w}</span><span class="text-center">${s.d}</span><span class="text-center">${s.l}</span><span class="text-center">${s.gf}</span><span class="text-center">${s.ga}</span><span class="text-center font-semibold" style="${gd > 0 ? "color:var(--success)" : gd < 0 ? "color:var(--danger)" : ""}">${gdTxt}</span><span class="text-center font-bold" style="${i < 2 ? "color:var(--accent)" : ""}">${s.pts}</span></div>`;
+              })
+              .join("");
+          return `<div class="card"><div class="flex items-center mb-3 pb-2" style="border-bottom:1px solid var(--border)"><span class="font-bold px-3 py-1 rounded text-xs" style="background:var(--accent);color:#000">GROUP ${g}</span></div>${teamInputs}${matches}${table}</div>`;
+        }).join("");
+      }
 
-/* ==========================================
+      /* ==========================================
    RENDER KNOCKOUT
    ========================================== */
-function renderKO(stage) {
-  const cont = document.getElementById(stage+"-grid");
-  if(!cont) return;
-  cont.innerHTML = S.matches[stage].map((m, i) => {
-    const ho = m.h || {n:"TBD", c:""}, ao = m.a || {n:"TBD", c:""};
-    const isDraw = m.hs!==null && m.as!==null && parseInt(m.hs)===parseInt(m.as);
-    return `<div class="card">
+      function renderKO(stage) {
+        const cont = document.getElementById(stage + "-grid");
+        if (!cont) return;
+        cont.innerHTML = S.matches[stage]
+          .map((m, i) => {
+            const ho = m.h || { n: "TBD", c: "" },
+              ao = m.a || { n: "TBD", c: "" };
+            const isDraw =
+              m.hs !== null &&
+              m.as !== null &&
+              parseInt(m.hs) === parseInt(m.as);
+            return `<div class="card">
       <div class="flex justify-between items-center mb-2 pb-2" style="border-bottom:1px solid var(--border)">
         <span class="font-bold text-xs" style="color:var(--accent)">${m.r}</span>
         <div class="flex gap-1"><input type="date" class="inp" style="width:100px;font-size:0.65rem" value="${m.dt}" onchange="setSch('${stage}',null,${i},'dt',this.value)"><input type="time" class="inp" style="width:65px;font-size:0.65rem" value="${m.tm}" onchange="setSch('${stage}',null,${i},'tm',this.value)"></div>
       </div>
-      <input class="inp w-full mb-2" style="font-size:0.65rem" placeholder="Stadium" value="${m.st||""}" onchange="setSch('${stage}',null,${i},'st',this.value)">
-      ${stage==="r32" ? `<div class="text-center mb-2"><span class="text-xs px-2 py-1 rounded" style="background:rgba(6,182,212,0.15);color:var(--secondary)">${m.d}</span></div>` : ""}
+      <input class="inp w-full mb-2" style="font-size:0.65rem" placeholder="Stadium" value="${m.st || ""}" onchange="setSch('${stage}',null,${i},'st',this.value)">
+      ${stage === "r32" ? `<div class="text-center mb-2"><span class="text-xs px-2 py-1 rounded" style="background:rgba(6,182,212,0.15);color:var(--secondary)">${m.d}</span></div>` : ""}
       <div class="flex items-center gap-2 mb-1">
         <div class="flex-1 text-right font-semibold text-sm truncate">${ho.n}</div>${flagHtml(ho.c)}
-        <input type="number" class="inp-score" value="${m.hs!==null?m.hs:''}" onchange="setScore('${stage}',null,${i},'h',this.value)">
+        <input type="number" class="inp-score" value="${m.hs !== null ? m.hs : ""}" onchange="setScore('${stage}',null,${i},'h',this.value)">
         <span style="color:var(--muted);font-weight:bold">-</span>
-        <input type="number" class="inp-score" value="${m.as!==null?m.as:''}" onchange="setScore('${stage}',null,${i},'a',this.value)">
+        <input type="number" class="inp-score" value="${m.as !== null ? m.as : ""}" onchange="setScore('${stage}',null,${i},'a',this.value)">
         ${flagHtml(ao.c)}<div class="flex-1 font-semibold text-sm truncate">${ao.n}</div>
       </div>
-      ${isDraw ? `<div class="pen-box"><span style="color:var(--muted)">PEN:</span><input type="number" class="pen-inp" min="0" max="20" value="${m.hp!==null?m.hp:''}" onchange="setPen('${stage}',${i},'h',this.value)"><span style="color:var(--muted)">-</span><input type="number" class="pen-inp" min="0" max="20" value="${m.ap!==null?m.ap:''}" onchange="setPen('${stage}',${i},'a',this.value)"></div>` : ""}
+      ${isDraw ? `<div class="pen-box"><span style="color:var(--muted)">PEN:</span><input type="number" class="pen-inp" min="0" max="20" value="${m.hp !== null ? m.hp : ""}" onchange="setPen('${stage}',${i},'h',this.value)"><span style="color:var(--muted)">-</span><input type="number" class="pen-inp" min="0" max="20" value="${m.ap !== null ? m.ap : ""}" onchange="setPen('${stage}',${i},'a',this.value)"></div>` : ""}
       <div class="flex gap-2 mt-2 text-xs" style="border-top:1px dashed var(--border);padding-top:4px">
-        <div class="flex-1 flex flex-wrap">${m.hsc.map(s=>`<span class="scorer-tag">${s} <button onclick="remSc('${stage}',null,${i},'h','${esc(s)}')">&times;</button></span>`).join("")}<div class="flex gap-1 mt-1"><input class="inp" style="width:80px;font-size:0.65rem" placeholder="Scorer" onkeypress="if(event.key==='Enter')addSc('${stage}',null,${i},'h')"><button class="btn" style="padding:2px 6px;font-size:0.6rem;background:var(--secondary);color:#fff" onclick="addSc('${stage}',null,${i},'h')">+</button></div></div>
-        <div class="flex-1 flex flex-wrap justify-end">${m.asc.map(s=>`<span class="scorer-tag">${s} <button onclick="remSc('${stage}',null,${i},'a','${esc(s)}')">&times;</button></span>`).join("")}<div class="flex gap-1 mt-1"><input class="inp" style="width:80px;font-size:0.65rem" placeholder="Scorer" onkeypress="if(event.key==='Enter')addSc('${stage}',null,${i},'a')"><button class="btn" style="padding:2px 6px;font-size:0.6rem;background:var(--secondary);color:#fff" onclick="addSc('${stage}',null,${i},'a')">+</button></div></div>
+        <div class="flex-1 flex flex-wrap">${m.hsc.map((s) => `<span class="scorer-tag">${s} <button onclick="remSc('${stage}',null,${i},'h','${esc(s)}')">&times;</button></span>`).join("")}<div class="flex gap-1 mt-1"><input class="inp" style="width:80px;font-size:0.65rem" placeholder="Scorer" onkeypress="if(event.key==='Enter')addSc('${stage}',null,${i},'h')"><button class="btn" style="padding:2px 6px;font-size:0.6rem;background:var(--secondary);color:#fff" onclick="addSc('${stage}',null,${i},'h')">+</button></div></div>
+        <div class="flex-1 flex flex-wrap justify-end">${m.asc.map((s) => `<span class="scorer-tag">${s} <button onclick="remSc('${stage}',null,${i},'a','${esc(s)}')">&times;</button></span>`).join("")}<div class="flex gap-1 mt-1"><input class="inp" style="width:80px;font-size:0.65rem" placeholder="Scorer" onkeypress="if(event.key==='Enter')addSc('${stage}',null,${i},'a')"><button class="btn" style="padding:2px 6px;font-size:0.6rem;background:var(--secondary);color:#fff" onclick="addSc('${stage}',null,${i},'a')">+</button></div></div>
       </div>
     </div>`;
-  }).join("");
-}
+          })
+          .join("");
+      }
 
-/* ==========================================
+      /* ==========================================
    CHAMPION CHECK
    ========================================== */
-function checkChamp() {
-  const f = S.matches.final[0];
-  const box = document.getElementById("champion-box");
-  if(!f || f.hs===null || f.as===null) { box.classList.add("hidden"); return; }
-  const w = getWinner(f);
-  if(w && w.n && w.n!=="TBD") { document.getElementById("champ-name").innerText = w.n; box.classList.remove("hidden"); }
-  else { box.classList.add("hidden"); }
-}
+      function checkChamp() {
+        const f = S.matches.final[0];
+        const box = document.getElementById("champion-box");
+        if (!f || f.hs === null || f.as === null) {
+          box.classList.add("hidden");
+          return;
+        }
+        const w = getWinner(f);
+        if (w && w.n && w.n !== "TBD") {
+          document.getElementById("champ-name").innerText = w.n;
+          box.classList.remove("hidden");
+        } else {
+          box.classList.add("hidden");
+        }
+      }
 
-/* ==========================================
+      /* ==========================================
    RENDER ALL
    ========================================== */
-function renderAll() {
-  renderGroups();
-  ["r32","r16","qf","sf","final"].forEach(s => renderKO(s));
-  checkChamp();
-  // Jika tab schedule sedang aktif, render juga
-  if(!document.getElementById("sec-schedule").classList.contains("hidden")) {
-    renderSchedule();
-  }
-}
+      function renderAll() {
+        renderGroups();
+        ["r32", "r16", "qf", "sf", "final"].forEach((s) => renderKO(s));
+        checkChamp();
+        // Jika tab schedule sedang aktif, render juga
+        if (
+          !document.getElementById("sec-schedule").classList.contains("hidden")
+        ) {
+          renderSchedule();
+        }
+      }
 
-/* ==========================================
+      /* ==========================================
    START APLIKASI
    ========================================== */
-if(!loadLocal()) {
-  createState();
-  calcStandings();
-  saveLocal();
-} else {
-  calcStandings();
-}
-renderAll();
-renderSchedule();
-</script>
-</body>
+      if (!loadLocal()) {
+        createState();
+        calcStandings();
+        saveLocal();
+      } else {
+        calcStandings();
+      }
+      renderAll();
+      renderSchedule();
+    </script>
+  </body>
 </html>
