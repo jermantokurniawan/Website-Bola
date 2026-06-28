@@ -1781,16 +1781,13 @@
         const best8Thirds = allThirds.slice(0, 8);
         state.bestThirds = best8Thirds;
 
-        const bestThirdGroups = best8Thirds.map((t) => t.group);
         const getThByGroup = (group) =>
           th[group] ? th[group].team : { name: "TBD", code: "" };
-
         const get = (o, k) => o[k] || { name: "TBD", code: "" };
 
         const x = state.matches.r32;
 
         // Distribusikan 3rd place ke match yang memungkinkan
-        // Sesuai jalur resmi FIFA 2026
         const thMap = {};
         best8Thirds.forEach((t, i) => {
           thMap[i + 1] = t.group;
@@ -1842,8 +1839,12 @@
             m.awayPen = null;
           });
         });
+
         document.getElementById("champion-display").classList.add("hidden");
+
+        // PENTING: Render ulang semua tampilan agar tim langsung tampil di R32
         renderAll();
+
         alert("Qualified! Best 3rd teams have been assigned.");
       }
 
