@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>World Cup 2026 Score Board</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Tambahkan ini -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap"
@@ -28,7 +27,6 @@
         --danger: #ef4444;
         --body-text: #f1f5f9;
       }
-
       [data-theme="light"] {
         --bg: #f8fafc;
         --bg-light: #e2e8f0;
@@ -44,7 +42,6 @@
         --danger: #dc2626;
         --body-text: #1e293b;
       }
-
       * {
         box-sizing: border-box;
       }
@@ -59,7 +56,6 @@
           background-color 0.3s,
           color 0.3s;
       }
-
       body::before {
         content: "";
         position: fixed;
@@ -95,7 +91,6 @@
         z-index: -1;
         opacity: 0.5;
       }
-
       .font-display {
         font-family: "Bebas Neue", sans-serif;
       }
@@ -106,7 +101,6 @@
         border-radius: 12px;
         transition: all 0.3s ease;
       }
-
       .input-score {
         background: rgba(0, 0, 0, 0.2);
         border: 2px solid var(--border);
@@ -127,7 +121,6 @@
         background: rgba(0, 0, 0, 0.4);
         color: var(--muted);
       }
-
       [data-theme="light"] .input-score {
         background: rgba(255, 255, 255, 0.5);
         border-color: var(--border);
@@ -140,7 +133,6 @@
         color: var(--fg);
         border-color: var(--border);
       }
-
       .input-generic {
         background: rgba(0, 0, 0, 0.2);
         border: 1px solid var(--border);
@@ -155,7 +147,6 @@
         border-color: var(--secondary);
         background: rgba(0, 0, 0, 0.4);
       }
-
       .input-schedule {
         background: rgba(0, 0, 0, 0.2);
         border: 1px solid var(--border);
@@ -173,7 +164,6 @@
         padding: 4px 8px;
         width: 100%;
       }
-
       .btn-tab {
         background: transparent;
         border: 1px solid var(--border);
@@ -196,7 +186,6 @@
         color: #000;
         box-shadow: 0 4px 15px var(--accent-glow);
       }
-
       .btn-primary {
         background: linear-gradient(135deg, var(--accent) 0%, #d97706 100%);
         color: #000;
@@ -213,7 +202,22 @@
         transform: translateY(-2px);
         box-shadow: 0 8px 25px var(--accent-glow);
       }
-
+      .btn-secondary {
+        background: linear-gradient(135deg, var(--secondary) 0%, #0891b2 100%);
+        color: #fff;
+        font-weight: 700;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+      }
+      .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px var(--secondary-glow);
+      }
       .btn-icon {
         background: rgba(255, 255, 255, 0.1);
         border: none;
@@ -227,7 +231,6 @@
         color: var(--accent);
         background: rgba(255, 255, 255, 0.2);
       }
-
       .header-btn {
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid var(--border);
@@ -248,10 +251,9 @@
         border-color: transparent;
         color: white;
       }
-
       .standing-row {
         display: grid;
-        grid-template-columns: 22px 1fr 26px 26px 26px 26px 26px 26px 30px 32px; /* Ditambah 35px 2x untuk GF dan GA */
+        grid-template-columns: 22px 1fr 26px 26px 26px 26px 26px 26px 30px 32px;
         gap: 2px;
         padding: 6px 6px;
         border-radius: 6px;
@@ -268,7 +270,10 @@
         background: rgba(16, 185, 129, 0.15);
         border-left: 3px solid var(--success);
       }
-
+      .standing-row.third-qualified {
+        background: rgba(6, 182, 212, 0.15);
+        border-left: 3px solid var(--secondary);
+      }
       .flag-icon {
         width: 22px;
         height: 16px;
@@ -285,7 +290,6 @@
         height: 28px;
         border-radius: 4px;
       }
-
       .schedule-card {
         background: linear-gradient(
           100deg,
@@ -302,7 +306,6 @@
           rgba(248, 250, 252, 0.9) 100%
         );
       }
-
       .champion-card {
         background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
         border: 2px solid var(--accent);
@@ -323,133 +326,12 @@
         );
         animation: rotate 10s linear infinite;
       }
-
-      .ball-container {
-        width: 140px;
-        height: 140px;
-        perspective: 1000px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 10;
-      }
-      .soccer-ball-3d {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        transform-style: preserve-3d;
-        animation: rotate3DBall 6s infinite linear;
-        background: radial-gradient(
-          circle at 30% 30%,
-          #ffffff 0%,
-          #dddddd 50%,
-          #111111 100%
-        );
-        border-radius: 50%;
-        box-shadow:
-          inset -10px -10px 30px rgba(0, 0, 0, 0.5),
-          inset 5px 5px 20px rgba(255, 255, 255, 0.3),
-          0 0 50px var(--accent-glow);
-      }
-      .header-ball-3d {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        background: radial-gradient(
-          circle at 30% 30%,
-          #ffffff 0%,
-          #e0e0e0 45%,
-          #333333 100%
-        );
-        box-shadow:
-          inset -3px -3px 8px rgba(0, 0, 0, 0.5),
-          inset 2px 2px 4px rgba(255, 255, 255, 0.4),
-          0 0 15px rgba(245, 158, 11, 0.4);
-        position: relative;
-        flex-shrink: 0;
-      }
-      .header-ball-3d::before,
-      .header-ball-3d::after {
-        content: "";
-        position: absolute;
-        background: #111;
-        clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
-      }
-      .header-ball-3d::before {
-        width: 12px;
-        height: 12px;
-        top: 6px;
-        left: 13px;
-        transform: rotate(10deg);
-      }
-      .header-ball-3d::after {
-        width: 10px;
-        height: 10px;
-        bottom: 6px;
-        left: 7px;
-        transform: rotate(-20deg);
-      }
-
-      @keyframes rotate3DBall {
-        from {
-          transform: rotateY(0deg) rotateX(10deg);
-        }
-        to {
-          transform: rotateY(360deg) rotateX(10deg);
-        }
-      }
       @keyframes rotate {
         from {
           transform: rotate(0deg);
         }
         to {
           transform: rotate(360deg);
-        }
-      }
-      @keyframes confetti-fall {
-        0% {
-          transform: translateY(0) rotate(0deg);
-          opacity: 1;
-        }
-        100% {
-          transform: translateY(100vh) rotate(720deg);
-          opacity: 0;
-        }
-      }
-      .confetti {
-        position: fixed;
-        width: 10px;
-        height: 10px;
-        top: -10px;
-        z-index: 1000;
-        animation: confetti-fall linear forwards;
-        opacity: 0;
-      }
-
-      .team-photo {
-        width: 130px;
-        height: 130px;
-        border-radius: 50%;
-        border: 4px solid var(--accent);
-        object-fit: cover;
-        background-color: #000;
-        box-shadow: 0 0 30px var(--accent-glow);
-        position: relative;
-        z-index: 10;
-      }
-      .trophy-icon {
-        font-size: 60px;
-        filter: drop-shadow(0 0 20px var(--accent-glow));
-        animation: bounce 2s infinite;
-        position: relative;
-        z-index: 10;
-      }
-      @keyframes bounce {
-        0%,
-        100% {
-          transform: translateY(0);
-        }
-        50% {
-          transform: translateY(-10px);
         }
       }
       @keyframes fadeInUp {
@@ -465,7 +347,6 @@
       .animate-fade-in {
         animation: fadeInUp 0.5s ease forwards;
       }
-
       .scorer-input-box {
         border-top: 1px dashed var(--border);
         margin-top: 8px;
@@ -541,7 +422,6 @@
         grid-template-columns: 1fr 1fr;
         gap: 8px;
       }
-
       .award-item {
         display: flex;
         align-items: center;
@@ -553,7 +433,6 @@
       [data-theme="light"] .award-item {
         background: rgba(0, 0, 0, 0.05);
       }
-
       .modal-overlay {
         position: fixed;
         top: 0;
@@ -587,7 +466,6 @@
       .modal-overlay.active .modal-content {
         transform: scale(1);
       }
-
       .penalty-section {
         display: flex;
         align-items: center;
@@ -652,7 +530,11 @@
           Format Excel: Baris pertama = Nama Tim (Contoh: "Indonesia"), Baris
           kedua dst = Nama Pemain.
         </p>
-        <textarea id="squad-textarea" ...></textarea>
+        <textarea
+          id="squad-textarea"
+          class="input-generic w-full h-48"
+          placeholder="Contoh: Cristiano Ronaldo, Bruno Fernandes..."
+        ></textarea>
         <div class="flex justify-end gap-2 mt-4">
           <button onclick="closeSquadModal()" class="header-btn">Cancel</button>
           <button onclick="saveSquad()" class="header-btn save">
@@ -670,14 +552,14 @@
           class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
         >
           <div class="flex items-center gap-3">
-            <div class="header-ball-3d"></div>
+            <div class="w-10 h-10 rounded-full bg-white/90"></div>
             <div>
               <h1
                 class="font-display text-2xl md:text-3xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[--accent] to-yellow-300"
               >
                 FIFA WORLD CUP 2026
-                <span class="text-base text-[--muted] font-sans italic">
-                  by Jermanto Setia Kurniawan</span
+                <span class="text-base text-[--muted] font-sans italic"
+                  >by Jermanto Setia Kurniawan</span
                 >
               </h1>
             </div>
@@ -688,46 +570,25 @@
               class="header-btn flex items-center gap-1"
               id="theme-btn"
             >
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                ></path>
-              </svg>
-              <span>Theme</span>
+              Theme
             </button>
             <button onclick="saveToLocal()" class="header-btn save">
               Save
             </button>
             <button onclick="exportData()" class="header-btn">Export</button>
-            <label class="header-btn cursor-pointer mb-0">
-              Import
-              <input
+            <label class="header-btn cursor-pointer mb-0"
+              >Import<input
                 type="file"
                 id="importFile"
                 accept=".json"
                 class="hidden"
                 onchange="importData(event)"
-              />
-            </label>
+            /></label>
             <button
               onclick="resetAll()"
               class="text-[--danger] hover:text-white transition-colors text-xs font-medium px-3 py-1 border border-transparent hover:border-[--danger] rounded"
             >
               Reset
-            </button>
-            <button
-              onclick="closeApp()"
-              class="text-[--muted] hover:text-white transition-colors text-xs font-medium px-3 py-1 border border-[--border] hover:border-[--fg] rounded bg-black/20"
-            >
-              Close App
             </button>
           </div>
         </div>
@@ -779,22 +640,28 @@
       </section>
 
       <section id="section-groups" class="hidden space-y-6">
-        <div
-          class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 card p-4"
-        >
+        <div class="flex flex-col gap-4 mb-4 card p-4">
           <div>
             <h2 class="font-display text-xl text-[--fg]">GROUP STAGE</h2>
             <p class="text-xs text-[--muted] mt-1">
-              Rank 1 & 2 lolos. Rank 3 potensial lolos. Klik tombol 'Sqd' untuk
+              Rank 1 & 2 lolos. Rank 3 terbaik lolos. Klik tombol 'Sqd' untuk
               edit pemain.
             </p>
           </div>
-          <button
-            onclick="processQualification()"
-            class="btn-primary w-full sm:w-auto text-center"
-          >
-            Update Standings & Qualify
-          </button>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <button
+              onclick="processQualification()"
+              class="btn-primary w-full sm:w-auto text-center"
+            >
+              Update Standings
+            </button>
+            <button
+              onclick="autoFillBestThirds()"
+              class="btn-secondary w-full sm:w-auto text-center"
+            >
+              Auto-Fill Best 3rd & Qualify
+            </button>
+          </div>
         </div>
         <div
           id="groups-container"
@@ -838,7 +705,6 @@
           class="grid grid-cols-1 md:grid-cols-2 gap-4"
         ></div>
       </section>
-
       <section id="section-third" class="hidden">
         <div class="text-center mb-8 pt-8">
           <h2 class="font-display text-3xl text-[--secondary]">
@@ -847,7 +713,6 @@
         </div>
         <div id="third-container" class="max-w-lg mx-auto"></div>
       </section>
-
       <section id="section-final" class="hidden">
         <div class="text-center mb-8 pt-8">
           <h2 class="font-display text-4xl text-[--accent]">FINAL MATCH</h2>
@@ -865,7 +730,7 @@
             </p>
             <div class="relative z-10 mb-4">
               <svg
-                class="w-20 h-20 mx-auto text-[--accent] trophy-icon"
+                class="w-20 h-20 mx-auto text-[--accent]"
                 viewBox="0 0 24 24"
                 fill="currentColor"
               >
@@ -879,7 +744,7 @@
                 id="champion-photo"
                 src=""
                 alt="Champion"
-                class="team-photo mb-2"
+                class="w-32 h-32 rounded-full border-4 border-[--accent] object-cover mb-2"
               />
               <img
                 id="champion-flag"
@@ -895,7 +760,6 @@
           </div>
         </div>
       </section>
-
       <section id="section-stats" class="hidden">
         <h2 class="font-display text-2xl text-[--fg] mb-6">
           TOURNAMENT AWARDS & STATISTICS
@@ -924,18 +788,6 @@
               class="font-display text-xl border-b border-[--border] pb-2 mb-4"
               style="color: #facc15"
             >
-              <span
-                class="card-icon yellow mr-1"
-                style="
-                  width: 10px;
-                  height: 14px;
-                  display: inline-block;
-                  vertical-align: middle;
-                  border-radius: 2px;
-                  background: #facc15;
-                  border: 1px solid #eab308;
-                "
-              ></span>
               Yellow Cards
             </h3>
             <div id="yc-list" class="space-y-2"></div>
@@ -945,18 +797,6 @@
               class="font-display text-xl border-b border-[--border] pb-2 mb-4"
               style="color: #ef4444"
             >
-              <span
-                class="card-icon red mr-1"
-                style="
-                  width: 10px;
-                  height: 14px;
-                  display: inline-block;
-                  vertical-align: middle;
-                  border-radius: 2px;
-                  background: #ef4444;
-                  border: 1px solid #dc2626;
-                "
-              ></span>
               Red Cards
             </h3>
             <div id="rc-list" class="space-y-2"></div>
@@ -1006,7 +846,7 @@
         "K",
         "L",
       ];
-      const APP_VERSION = "9.1";
+      const APP_VERSION = "9.3";
 
       const COUNTRY_MAP = {
         indonesia: "id",
@@ -1084,6 +924,7 @@
         standings: {},
         scorers: [],
         squads: {},
+        bestThirds: [], // Menyimpan info peringkat 3 terbaik
       };
 
       function getCountryCode(name) {
@@ -1100,7 +941,6 @@
           return `<span class="flag-icon opacity-30"></span>`;
         return `<img src="https://flagcdn.com/w40/${teamObj.code}.png" class="flag-icon" alt="${teamObj.name}">`;
       }
-
       function toggleTheme() {
         const body = document.body;
         const isLight = body.getAttribute("data-theme") === "light";
@@ -1111,19 +951,6 @@
         const saved = localStorage.getItem("theme");
         if (saved === "light")
           document.body.setAttribute("data-theme", "light");
-      }
-
-      function closeApp() {
-        if (confirm("Close application? Make sure you saved progress.")) {
-          window.close();
-          setTimeout(
-            () =>
-              alert(
-                "Please close the tab manually if it doesn't close automatically.",
-              ),
-            100,
-          );
-        }
       }
 
       let currentEditingTeam = null;
@@ -1138,86 +965,63 @@
         document.getElementById("squad-modal").classList.remove("active");
       }
       function saveSquad() {
-        // Pastikan mengambil nilai terbaru dari input nama tim di modal
         const teamName = document.getElementById("squad-team-name").innerText;
         const text = document.getElementById("squad-textarea").value;
         const players = text
           .split(/[\n,]+/)
           .map((p) => p.trim())
           .filter((p) => p.length > 0);
-
         state.squads[teamName] = players;
         closeSquadModal();
-
         if (
           document
             .querySelector('[data-tab="groups"]')
             .classList.contains("active")
-        ) {
+        )
           renderGroups();
-        }
         saveToLocal();
       }
       function getSquadList(teamName) {
         return state.squads[teamName] || [];
       }
+
       async function importSquadExcel(event) {
         const file = event.target.files[0];
         if (!file) return;
-
         try {
           const data = await file.arrayBuffer();
           const workbook = XLSX.read(data);
-
-          // Ambil sheet pertama
           const firstSheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[firstSheetName];
-
-          // Konversi ke array 2 dimensi (setiap baris jadi array)
           const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
           if (jsonData.length === 0) {
             alert("File Excel kosong!");
             return;
           }
-
-          // Asumsi format Excel:
-          // Baris 1: Nama Tim (misal: Indonesia)
-          // Baris 2 ke bawah: Nama Pemain
           const teamName = String(jsonData[0][0] || "").trim();
           const players = [];
-
           for (let i = 1; i < jsonData.length; i++) {
-            if (jsonData[i] && jsonData[i][0]) {
+            if (jsonData[i] && jsonData[i][0])
               players.push(String(jsonData[i][0]).trim());
-            }
           }
-
           if (!teamName) {
             alert("Baris pertama kolom pertama harus berisi Nama Tim!");
             return;
           }
-
-          // Update state dan UI
           currentEditingTeam = teamName;
           document.getElementById("squad-team-name").innerText = teamName;
           document.getElementById("squad-textarea").value = players.join(", ");
-
-          // Langsung simpan ke state
           state.squads[teamName] = players;
-
           alert(
             `Squad ${teamName} berhasil diimport (${players.length} pemain)!`,
           );
-
-          // Reset input file agar bisa upload file yang sama lagi
           event.target.value = "";
         } catch (error) {
           console.error(error);
           alert("Gagal membaca file Excel. Pastikan formatnya benar.");
         }
       }
-      // Fungsi helper untuk mengubah data lama (string) ke format baru (object)
+
       function ensureScorerFormat(scorersArr) {
         if (!scorersArr) return [];
         return scorersArr.map((s) => {
@@ -1232,7 +1036,7 @@
               rc: isRC,
             };
           }
-          return s; // Sudah berbentuk object
+          return s;
         });
       }
 
@@ -1390,7 +1194,6 @@
         try {
           localStorage.setItem("worldCupScoreboardData", JSON.stringify(state));
           localStorage.setItem("worldCupAppVersion", APP_VERSION);
-          alert("Saved!");
         } catch (e) {}
       }
       function loadFromLocal() {
@@ -1403,6 +1206,7 @@
           try {
             state = JSON.parse(s);
             if (!state.squads) state.squads = {};
+            if (!state.bestThirds) state.bestThirds = [];
             return true;
           } catch (e) {
             return false;
@@ -1464,88 +1268,88 @@
           st.code = t.code;
         }
         renderGroupCard(g);
-        saveToLocal(); // <-- TAMBAHKAN INI
+        saveToLocal();
       }
 
       function renderGroupCard(g) {
-        const t = state.groups[g];
-        const s = state.standings[g];
-        const m = state.matches.groups[g];
+        const t = state.groups[g],
+          s = state.standings[g],
+          m = state.matches.groups[g];
         const c = document.getElementById(`group-card-${g}`);
+
+        // Tentukan tim peringkat 3 yang lolos untuk highlight di UI
+        const bestThirdGroups = state.bestThirds.map((b) => b.group);
+
         const setup = `<div class="setup-grid mb-3">${t
           .map(
-            (
-              x,
-              i,
-            ) => `<div class="flex items-center gap-2 bg-black/20 rounded p-1">
-      ${getFlagHTML(x)}<input class="input-generic" value="${x.name}" onchange="updateTeamData('${g}', ${i}, this.value)">
-      <button onclick="openSquadEditor('${x.name}')" class="btn-icon text-xs" title="Edit Squad">Sqd</button>
-      </div>`,
+            (x, i) =>
+              `<div class="flex items-center gap-2 bg-black/20 rounded p-1">
+            ${getFlagHTML(x)}<input class="input-generic" value="${x.name}" onchange="updateTeamData('${g}', ${i}, this.value)">
+            <button onclick="openSquadEditor('${x.name}')" class="btn-icon text-xs" title="Edit Squad">Sqd</button>
+          </div>`,
           )
           .join("")}</div>`;
 
         const matches = m
           .map((x, i) => {
-            const h = t[x.home];
-            const a = t[x.away];
-            const hList = getSquadList(h.name);
-            const aList = getSquadList(a.name);
+            const h = t[x.home],
+              a = t[x.away];
+            const hList = getSquadList(h.name),
+              aList = getSquadList(a.name);
             const makeInput = (list, side) =>
               list.length > 0
                 ? `<div class="flex gap-1">
-         <select class="input-generic text-xs flex-1" onchange="if(this.value) addScorer('groups', '${g}', ${i}, '${side}', this.value, this)">
-           <option value="">+ Scorer</option>
-           ${list.map((p) => `<option value="${p}">${p}</option>`).join("")}
-         </select>
-         <button type="button" class="btn-icon text-[10px] px-2 og-selector" title="Own Goal" onclick="this.classList.toggle('active-og')">OG</button>
-         <button type="button" class="btn-icon text-[10px] px-2" title="Yellow Card" onclick="this.classList.toggle('active-yc')">YC</button>
-         <button type="button" class="btn-icon text-[10px] px-2" title="Red Card" onclick="this.classList.toggle('active-rc')">RC</button>
-       </div>`
+                   <select class="input-generic text-xs flex-1" onchange="if(this.value) addScorer('groups', '${g}', ${i}, '${side}', this.value, this)">
+                     <option value="">+ Scorer</option>
+                     ${list.map((p) => `<option value="${p}">${p}</option>`).join("")}
+                   </select>
+                   <button type="button" class="btn-icon text-[10px] px-2 og-selector" title="Own Goal" onclick="this.classList.toggle('active-og')">OG</button>
+                   <button type="button" class="btn-icon text-[10px] px-2" title="Yellow Card" onclick="this.classList.toggle('active-yc')">YC</button>
+                   <button type="button" class="btn-icon text-[10px] px-2" title="Red Card" onclick="this.classList.toggle('active-rc')">RC</button>
+                 </div>`
                 : `<div class="flex gap-1">
-         <input type="text" placeholder="Scorer" class="input-generic text-xs flex-1" onkeypress="if(event.key==='Enter') addScorer('groups', '${g}', ${i}, '${side}', this.value, this)">
-         <button type="button" class="btn-icon text-[10px] px-2 og-selector" title="Own Goal" onclick="this.classList.toggle('active-og')">OG</button>
-         <button type="button" class="btn-icon text-[10px] px-2" title="Yellow Card" onclick="this.classList.toggle('active-yc')">YC</button>
-         <button type="button" class="btn-icon text-[10px] px-2" title="Red Card" onclick="this.classList.toggle('active-rc')">RC</button>
-       </div>`;
+                   <input type="text" placeholder="Scorer" class="input-generic text-xs flex-1" onkeypress="if(event.key==='Enter') addScorer('groups', '${g}', ${i}, '${side}', this.value, this)">
+                   <button type="button" class="btn-icon text-[10px] px-2 og-selector" title="Own Goal" onclick="this.classList.toggle('active-og')">OG</button>
+                   <button type="button" class="btn-icon text-[10px] px-2" title="Yellow Card" onclick="this.classList.toggle('active-yc')">YC</button>
+                   <button type="button" class="btn-icon text-[10px] px-2" title="Red Card" onclick="this.classList.toggle('active-rc')">RC</button>
+                 </div>`;
 
             return `<div class="bg-black/10 rounded-lg p-2 text-xs mb-2">
-      <div class="flex justify-between mb-1 text-[--muted] items-center">
-      <span class="uppercase text-[10px] font-bold">M ${i + 1}</span>
-      <div class="flex gap-1"><input type="date" class="input-schedule" value="${x.date}" onchange="updateSch('groups', '${g}', ${i}, 'date', this.value)"><input type="time" class="input-schedule" value="${x.time}" onchange="updateSch('groups', '${g}', ${i}, 'time', this.value)"></div>
-      </div>
-      <div class="mb-2"><input class="input-stadium" placeholder="Stadium" value="${x.stadium || ""}" onchange="updateSch('groups', '${g}', ${i}, 'stadium', this.value)"></div>
-      <div class="flex items-center gap-2 mb-2">
-      <div class="flex-1 flex items-center justify-end gap-2 truncate"><span class="font-semibold">${h.name}</span>${getFlagHTML(h)}</div>
-      <div class="flex items-center gap-1 bg-black/30 p-1 rounded">
-      <input type="number" class="input-score w-8 h-7 text-xs" value="${x.homeScore != null ? x.homeScore : ""}" onchange="updateScore('groups', '${g}', ${i}, 'home', this.value)">
-      <span class="text-[--muted]">-</span>
-      <input type="number" class="input-score w-8 h-7 text-xs" value="${x.awayScore != null ? x.awayScore : ""}" onchange="updateScore('groups', '${g}', ${i}, 'away', this.value)">
-      </div>
-      <div class="flex-1 flex items-center gap-2 truncate">${getFlagHTML(a)}<span class="font-semibold">${a.name}</span></div>
-      </div>
-      <div class="scorer-input-box">
-      <div class="flex gap-2 mb-1">
-      <div class="flex-1 flex-wrap"> ${x.homeScorers.map((p) => `<span class="scorer-tag ${p.og ? "og-tag" : ""} ${p.yc ? "yc-tag" : ""} ${p.rc ? "rc-tag" : ""}">${p.name}${getEventIcons(p)} <button onclick="remScorer('groups', '${g}', ${i}, 'home', '${p.name}')">&times;</button></span>`).join("")}</div>
-      <div class="flex-1 flex-wrap flex justify-end"> ${x.awayScorers.map((p) => `<span class="scorer-tag ${p.og ? "og-tag" : ""} ${p.yc ? "yc-tag" : ""} ${p.rc ? "rc-tag" : ""}">${p.name}${getEventIcons(p)} <button onclick="remScorer('groups', '${g}', ${i}, 'away', '${p.name}')">&times;</button></span>`).join("")}</div>
-      </div>
-      <div class="flex gap-2">
-      <div class="flex-1">${makeInput(hList, "home")}</div>
-      <div class="flex-1">${makeInput(aList, "away")}</div>
-      </div>
-      </div>
-      </div>`;
+            <div class="flex justify-between mb-1 text-[--muted] items-center">
+              <span class="uppercase text-[10px] font-bold">M ${i + 1}</span>
+              <div class="flex gap-1"><input type="date" class="input-schedule" value="${x.date}" onchange="updateSch('groups', '${g}', ${i}, 'date', this.value)"><input type="time" class="input-schedule" value="${x.time}" onchange="updateSch('groups', '${g}', ${i}, 'time', this.value)"></div>
+            </div>
+            <div class="mb-2"><input class="input-stadium" placeholder="Stadium" value="${x.stadium || ""}" onchange="updateSch('groups', '${g}', ${i}, 'stadium', this.value)"></div>
+            <div class="flex items-center gap-2 mb-2">
+              <div class="flex-1 flex items-center justify-end gap-2 truncate"><span class="font-semibold">${h.name}</span>${getFlagHTML(h)}</div>
+              <div class="flex items-center gap-1 bg-black/30 p-1 rounded">
+                <input type="number" class="input-score w-8 h-7 text-xs" value="${x.homeScore != null ? x.homeScore : ""}" onchange="updateScore('groups', '${g}', ${i}, 'home', this.value)">
+                <span class="text-[--muted]">-</span>
+                <input type="number" class="input-score w-8 h-7 text-xs" value="${x.awayScore != null ? x.awayScore : ""}" onchange="updateScore('groups', '${g}', ${i}, 'away', this.value)">
+              </div>
+              <div class="flex-1 flex items-center gap-2 truncate">${getFlagHTML(a)}<span class="font-semibold">${a.name}</span></div>
+            </div>
+            <div class="scorer-input-box">
+              <div class="flex gap-2 mb-1">
+                <div class="flex-1 flex-wrap"> ${x.homeScorers.map((p) => `<span class="scorer-tag ${p.og ? "og-tag" : ""} ${p.yc ? "yc-tag" : ""} ${p.rc ? "rc-tag" : ""}">${p.name}${getEventIcons(p)} <button onclick="remScorer('groups', '${g}', ${i}, 'home', '${p.name}')">&times;</button></span>`).join("")}</div>
+                <div class="flex-1 flex-wrap flex justify-end"> ${x.awayScorers.map((p) => `<span class="scorer-tag ${p.og ? "og-tag" : ""} ${p.yc ? "yc-tag" : ""} ${p.rc ? "rc-tag" : ""}">${p.name}${getEventIcons(p)} <button onclick="remScorer('groups', '${g}', ${i}, 'away', '${p.name}')">&times;</button></span>`).join("")}</div>
+              </div>
+              <div class="flex gap-2">
+                <div class="flex-1">${makeInput(hList, "home")}</div>
+                <div class="flex-1">${makeInput(aList, "away")}</div>
+              </div>
+            </div>
+          </div>`;
           })
           .join("");
 
-        // Hitung GF dan GA secara dinamis dari hasil match
         const gfGaMap = {};
         t.forEach((team) => {
           gfGaMap[team.name] = { gf: 0, ga: 0 };
         });
-
         m.forEach((match) => {
-          const homeTeam = t[match.home];
-          const awayTeam = t[match.away];
+          const homeTeam = t[match.home],
+            awayTeam = t[match.away];
           if (
             homeTeam &&
             awayTeam &&
@@ -1559,27 +1363,32 @@
           }
         });
 
-      const stand = `<div class="standing-row header"><span>#</span><span>Team</span><span class="text-center">P</span><span class="text-center">W</span><span class="text-center">D</span><span class="text-center">L</span><span class="text-center">F</span><span class="text-center">A</span><span class="text-center">GD</span><span class="text-center">Pts</span></div>
-      ${s
-        .map((x, i) => {
-          const gf = gfGaMap[x.team] ? gfGaMap[x.team].gf : 0;
-          const ga = gfGaMap[x.team] ? gfGaMap[x.team].ga : 0;
-          const gd = gf - ga;
-          const gdText = gd > 0 ? `+${gd}` : gd;
-          return `<div class="standing-row ${i < 2 ? "qualified" : ""} mt-1">
-      <span class="font-bold text-[10px] ${i < 2 ? "text-[--success]" : "text-[--muted]"}">${i + 1}</span>
-      <div class="team-name-container truncate">${getFlagHTML(x)}<span class="font-semibold text-[10px] truncate">${x.team}</span></div>
-      <span class="text-center text-[10px] text-[--muted]">${x.played}</span>
-      <span class="text-center text-[10px] text-[--muted]">${x.won}</span>
-      <span class="text-center text-[10px] text-[--muted]">${x.drawn}</span>
-      <span class="text-center text-[10px] text-[--muted]">${x.lost}</span>
-      <span class="text-center text-[10px] text-[--muted]">${gf}</span>
-      <span class="text-center text-[10px] text-[--muted]">${ga}</span>
-      <span class="text-center text-[10px] font-semibold ${gd > 0 ? "text-[--success]" : gd < 0 ? "text-[--danger]" : "text-[--muted]"}">${gdText}</span>
-      <span class="text-center font-bold text-[11px] ${i < 2 ? "text-[--accent]" : "text-[--fg]"}">${x.points}</span>
-      </div>`;
-        })
-        .join("")}`;
+        const stand = `<div class="standing-row header"><span>#</span><span>Team</span><span class="text-center">P</span><span class="text-center">W</span><span class="text-center">D</span><span class="text-center">L</span><span class="text-center">F</span><span class="text-center">A</span><span class="text-center">GD</span><span class="text-center">Pts</span></div>
+        ${s
+          .map((x, i) => {
+            const gf = gfGaMap[x.team] ? gfGaMap[x.team].gf : 0;
+            const ga = gfGaMap[x.team] ? gfGaMap[x.team].ga : 0;
+            const gd = gf - ga;
+            const gdText = gd > 0 ? `+${gd}` : gd;
+            let rowClass = "";
+            if (i < 2) rowClass = "qualified";
+            else if (i === 2 && bestThirdGroups.includes(g))
+              rowClass = "third-qualified";
+
+            return `<div class="standing-row ${rowClass} mt-1">
+            <span class="font-bold text-[10px] ${i < 2 ? "text-[--success]" : i === 2 && bestThirdGroups.includes(g) ? "text-[--secondary]" : "text-[--muted]"}">${i + 1}</span>
+            <div class="team-name-container truncate">${getFlagHTML(x)}<span class="font-semibold text-[10px] truncate">${x.team}</span></div>
+            <span class="text-center text-[10px] text-[--muted]">${x.played}</span>
+            <span class="text-center text-[10px] text-[--muted]">${x.won}</span>
+            <span class="text-center text-[10px] text-[--muted]">${x.drawn}</span>
+            <span class="text-center text-[10px] text-[--muted]">${x.lost}</span>
+            <span class="text-center text-[10px] text-[--muted]">${gf}</span>
+            <span class="text-center text-[10px] text-[--muted]">${ga}</span>
+            <span class="text-center text-[10px] font-semibold ${gd > 0 ? "text-[--success]" : gd < 0 ? "text-[--danger]" : "text-[--muted]"}">${gdText}</span>
+            <span class="text-center font-bold text-[11px] ${i < 2 ? "text-[--accent]" : "text-[--fg]"}">${x.points}</span>
+          </div>`;
+          })
+          .join("")}`;
 
         c.innerHTML = `<div class="flex items-center justify-between mb-3 pb-2 border-b border-[--border]"><span class="bg-gradient-to-r from-[--accent] to-yellow-300 text-[--bg] font-bold px-3 py-1 rounded text-xs tracking-wider">GROUP ${g}</span></div>${setup}<div class="space-y-3 mb-4">${matches}</div><div class="border-t border-[--border] pt-3">${stand}</div>`;
       }
@@ -1593,8 +1402,8 @@
       }
 
       function renderKnockoutMatch(m, idx, stage) {
-        const h = m.home;
-        const a = m.away;
+        const h = m.home,
+          a = m.away;
         const hn = h ? h.name : "TBD";
         const an = a ? a.name : "TBD";
         const isDraw =
@@ -1613,8 +1422,8 @@
           }
         }
 
-        const hList = getSquadList(hn);
-        const aList = getSquadList(an);
+        const hList = getSquadList(hn),
+          aList = getSquadList(an);
         const makeInput = (list, side) =>
           list.length > 0
             ? `<div class="flex gap-1">
@@ -1622,55 +1431,54 @@
                    <option value="">+ Scorer</option>
                    ${list.map((p) => `<option value="${p}">${p}</option>`).join("")}
                  </select>
-                 <button type="button" class="btn-icon text-[10px] px-2 og-selector" title="Own Goal" onclick="this.classList.toggle('active-og'); this.previousElementSibling.classList.toggle('og-selector');">OG</button>
+                 <button type="button" class="btn-icon text-[10px] px-2 og-selector" title="Own Goal" onclick="this.classList.toggle('active-og')">OG</button>
                </div>`
             : `<div class="flex gap-1">
                  <input type="text" placeholder="Scorer" class="input-generic text-xs flex-1" onkeypress="if(event.key==='Enter') addScorer('${stage}', null, ${idx}, '${side}', this.value, this)">
-                 <button type="button" class="btn-icon text-[10px] px-2 og-selector" title="Own Goal" onclick="this.classList.toggle('active-og'); this.previousElementSibling.classList.toggle('og-selector');">OG</button>
+                 <button type="button" class="btn-icon text-[10px] px-2 og-selector" title="Own Goal" onclick="this.classList.toggle('active-og')">OG</button>
                </div>`;
 
         return `<div class="card match-card p-4">
-      <div class="flex justify-between mb-3 text-[--muted] items-center border-b border-[--border] pb-2">
-      <div><span class="text-xs font-bold uppercase tracking-wider text-[--secondary]">${m.round}</span><span class="text-[10px] block italic">${m.desc}</span></div>
-      <div class="flex gap-1"><input type="date" class="input-schedule" value="${m.date}" onchange="updateSch('${stage}', null, ${idx}, 'date', this.value)"><input type="time" class="input-schedule" value="${m.time}" onchange="updateSch('${stage}', null, ${idx}, 'time', this.value)"></div>
-      </div>
-      <div class="mb-3"><input class="input-stadium" placeholder="Stadium" value="${m.stadium || ""}" onchange="updateSch('${stage}', null, ${idx}, 'stadium', this.value)"></div>
-      <div class="space-y-3">
-      <div class="flex items-center gap-3">
-      <div class="flex-1 flex items-center justify-end gap-2 truncate"><span class="font-semibold truncate ${winner === h ? "text-[--accent]" : ""}">${hn}</span>${h ? getFlagHTML(h) : ""}</div>
-      <input type="number" class="input-score" value="${m.homeScore != null ? m.homeScore : ""}" onchange="updateScore('${stage}', null, ${idx}, 'home', this.value)" ${!h ? "disabled" : ""}>
-      </div>
-      <div class="border-t border-dashed border-[--border] flex items-center justify-center"><span class="text-[--muted] text-xs bg-[--card] px-2 -mt-2">VS</span></div>
-      <div class="flex items-center gap-3">
-      <div class="flex-1 flex items-center justify-end gap-2 truncate"><span class="font-semibold truncate ${winner === a ? "text-[--accent]" : ""}">${an}</span>${a ? getFlagHTML(a) : ""}</div>
-      <input type="number" class="input-score" value="${m.awayScore != null ? m.awayScore : ""}" onchange="updateScore('${stage}', null, ${idx}, 'away', this.value)" ${!a ? "disabled" : ""}>
-      </div>
-      </div>
-
-      ${
-        showPen
-          ? `
-      <div class="penalty-section mt-3">
-      <span class="text-[--muted] text-xs">PEN:</span>
-      <input type="number" class="penalty-input" value="${m.homePen || ""}" onchange="updatePen('${stage}', ${idx}, 'home', this.value)" placeholder="0">
-      <span class="text-[--muted]">-</span>
-      <input type="number" class="penalty-input" value="${m.awayPen || ""}" onchange="updatePen('${stage}', ${idx}, 'away', this.value)" placeholder="0">
-      </div>`
-          : ""
+          <div class="flex justify-between mb-3 text-[--muted] items-center border-b border-[--border] pb-2">
+            <div><span class="text-xs font-bold uppercase tracking-wider text-[--secondary]">${m.round}</span><span class="text-[10px] block italic">${m.desc}</span></div>
+            <div class="flex gap-1"><input type="date" class="input-schedule" value="${m.date}" onchange="updateSch('${stage}', null, ${idx}, 'date', this.value)"><input type="time" class="input-schedule" value="${m.time}" onchange="updateSch('${stage}', null, ${idx}, 'time', this.value)"></div>
+          </div>
+          <div class="mb-3"><input class="input-stadium" placeholder="Stadium" value="${m.stadium || ""}" onchange="updateSch('${stage}', null, ${idx}, 'stadium', this.value)"></div>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="flex-1 flex items-center justify-end gap-2 truncate"><span class="font-semibold truncate ${winner === h ? "text-[--accent]" : ""}">${hn}</span>${h ? getFlagHTML(h) : ""}</div>
+              <input type="number" class="input-score" value="${m.homeScore != null ? m.homeScore : ""}" onchange="updateScore('${stage}', null, ${idx}, 'home', this.value)" ${!h ? "disabled" : ""}>
+            </div>
+            <div class="border-t border-dashed border-[--border] flex items-center justify-center"><span class="text-[--muted] text-xs bg-[--card] px-2 -mt-2">VS</span></div>
+            <div class="flex items-center gap-3">
+              <div class="flex-1 flex items-center justify-end gap-2 truncate"><span class="font-semibold truncate ${winner === a ? "text-[--accent]" : ""}">${an}</span>${a ? getFlagHTML(a) : ""}</div>
+              <input type="number" class="input-score" value="${m.awayScore != null ? m.awayScore : ""}" onchange="updateScore('${stage}', null, ${idx}, 'away', this.value)" ${!a ? "disabled" : ""}>
+            </div>
+          </div>
+          ${
+            showPen
+              ? `
+          <div class="penalty-section mt-3">
+            <span class="text-[--muted] text-xs">PEN:</span>
+            <input type="number" class="penalty-input" value="${m.homePen || ""}" onchange="updatePen('${stage}', ${idx}, 'home', this.value)" placeholder="0">
+            <span class="text-[--muted]">-</span>
+            <input type="number" class="penalty-input" value="${m.awayPen || ""}" onchange="updatePen('${stage}', ${idx}, 'away', this.value)" placeholder="0">
+          </div>`
+              : ""
+          }
+          <div class="scorer-input-box mt-3">
+            <div class="flex gap-2 mb-1">
+              <div class="flex-1 flex-wrap"> ${m.homeScorers.map((p) => `<span class="scorer-tag ${p.og ? "og-tag" : ""} ${p.yc ? "yc-tag" : ""} ${p.rc ? "rc-tag" : ""}">${p.name}${getEventIcons(p)} <button onclick="remScorer('${stage}', null, ${idx}, 'home', '${p.name}')">&times;</button></span>`).join("")}</div>
+              <div class="flex-1 flex-wrap flex justify-end"> ${m.awayScorers.map((p) => `<span class="scorer-tag ${p.og ? "og-tag" : ""} ${p.yc ? "yc-tag" : ""} ${p.rc ? "rc-tag" : ""}">${p.name}${getEventIcons(p)} <button onclick="remScorer('${stage}', null, ${idx}, 'away', '${p.name}')">&times;</button></span>`).join("")}</div>
+            </div>
+            <div class="flex gap-2">
+              <div class="flex-1">${h ? makeInput(hList, "home") : ""}</div>
+              <div class="flex-1">${a ? makeInput(aList, "away") : ""}</div>
+            </div>
+          </div>
+        </div>`;
       }
 
-      <div class="scorer-input-box mt-3">
-      <div class="flex gap-2 mb-1">
-      <div class="flex-1 flex-wrap"> ${x.homeScorers.map((p) => `<span class="scorer-tag ${p.og ? "og-tag" : ""} ${p.yc ? "yc-tag" : ""} ${p.rc ? "rc-tag" : ""}">${p.name}${getEventIcons(p)} <button onclick="remScorer('groups', '${g}', ${i}, 'home', '${p.name}')">&times;</button></span>`).join("")}</div>
-      <div class="flex-1 flex-wrap flex justify-end"> ${x.awayScorers.map((p) => `<span class="scorer-tag ${p.og ? "og-tag" : ""} ${p.yc ? "yc-tag" : ""} ${p.rc ? "rc-tag" : ""}">${p.name}${getEventIcons(p)} <button onclick="remScorer('groups', '${g}', ${i}, 'away', '${p.name}')">&times;</button></span>`).join("")}</div>
-      </div>
-      <div class="flex gap-2">
-      <div class="flex-1">${h ? makeInput(hList, "home") : ""}</div>
-      <div class="flex-1">${a ? makeInput(aList, "away") : ""}</div>
-      </div>
-      </div>
-      </div>`;
-      }
       function renderKnockout(s) {
         document.getElementById(`${s}-container`).innerHTML = state.matches[s]
           .map((m, i) => renderKnockoutMatch(m, i, s))
@@ -1680,7 +1488,7 @@
       function updateSch(s, g, i, f, v) {
         const m = g ? state.matches.groups[g][i] : state.matches[s][i];
         if (m) m[f] = v;
-        //saveToLocal(); // <-- TAMBAHKAN INI
+        saveToLocal();
       }
       function updatePen(s, i, side, v) {
         state.matches[s][i][side + "Pen"] = v === "" ? null : parseInt(v);
@@ -1690,9 +1498,8 @@
         if (s === "sf") renderKnockout("third");
         renderStats();
         renderSchedule();
-        saveToLocal(); // <-- TAMBAHKAN INI
+        saveToLocal();
       }
-
       function updateScore(s, g, i, side, v) {
         const sc = v === "" ? null : parseInt(v) || 0;
         if (g) {
@@ -1711,9 +1518,9 @@
         }
         renderStats();
         renderSchedule();
-        // TAMBAHKAN BARIS INI AGAR OTOMATIS SAVE SAAT SKOR DIUBAH
         saveToLocal();
       }
+
       function getEventIcons(p) {
         let icons = "";
         if (p.og) icons += " (OG)";
@@ -1724,18 +1531,13 @@
           icons += ' <span class="card-icon red" title="Red Card"></span>';
         return icons;
       }
+
       function addScorer(stage, groupOrIndex, matchIndex, side, name, el) {
         if (!name) return;
-
         let matches;
-        if (stage === "groups") {
-          matches = state.matches.groups[groupOrIndex];
-        } else {
-          matches = state.matches[stage];
-        }
+        if (stage === "groups") matches = state.matches.groups[groupOrIndex];
+        else matches = state.matches[stage];
         const match = matches[matchIndex];
-
-        // Cari tombel OG/YC/RC yang sebaris dengan dropdown/input ini
         const parentRow = el.closest(".flex");
         const ogBtn = parentRow
           ? parentRow.querySelector(".og-selector")
@@ -1746,74 +1548,43 @@
         const rcBtn = parentRow
           ? parentRow.querySelector('.btn-icon[title="Red Card"]')
           : null;
-
         const isOG = ogBtn ? ogBtn.classList.contains("active-og") : false;
         const isYC = ycBtn ? ycBtn.classList.contains("active-yc") : false;
         const isRC = rcBtn ? rcBtn.classList.contains("active-rc") : false;
-
-        // WAJIB simpan sebagai Object agar konsisten
         match[side + "Scorers"].push({
           name: name,
           og: isOG,
           yc: isYC,
           rc: isRC,
         });
-
-        // Reset UI setelah menambah
-        if (el.tagName === "SELECT") {
-          el.value = "";
-        } else {
-          el.value = "";
-        }
+        if (el.tagName === "SELECT") el.value = "";
+        else el.value = "";
         if (ogBtn) ogBtn.classList.remove("active-og");
         if (ycBtn) ycBtn.classList.remove("active-yc");
         if (rcBtn) rcBtn.classList.remove("active-rc");
-
-        // Render ulang
-        if (stage === "groups") {
-          renderGroupCard(groupOrIndex);
-        } else {
-          renderKnockout(stage);
-        }
-
-        // PENTING: Langsung update statistik Golden Boot setelah mencetak gol!
+        if (stage === "groups") renderGroupCard(groupOrIndex);
+        else renderKnockout(stage);
         renderStats();
         saveToLocal();
       }
 
-      // Fungsi untuk menghapus scorer (sekarang berbentuk object)
       function remScorer(stage, group, idx, side, name) {
         let matchArr;
         if (stage === "groups") matchArr = state.matches.groups[group];
         else matchArr = state.matches[stage];
-
         const match = matchArr[idx];
-        if (side === "home") {
+        if (side === "home")
           match.homeScorers = match.homeScorers.filter((s) => s.name !== name);
-        } else {
+        else
           match.awayScorers = match.awayScorers.filter((s) => s.name !== name);
-        }
-
         if (stage === "groups") renderGroupCard(group);
         else renderKnockout(stage);
-
         saveToLocal();
-      }
-      function updateScorers(n, t, c) {
-        const e = state.scorers.find((s) => s.name === n && s.team === t);
-        if (e) {
-          e.goals += c;
-          if (e.goals <= 0)
-            state.scorers = state.scorers.filter((x) => x !== e);
-        } else if (c > 0) state.scorers.push({ name: n, team: t, goals: c });
-        state.scorers.sort((a, b) => b.goals - a.goals);
       }
 
       function calcStand(g) {
         const teams = state.groups[g];
         const matches = state.matches.groups[g];
-
-        // 1. Inisialisasi data klasemen untuk setiap tim
         let standingsMap = {};
         teams.forEach((t, idx) => {
           if (!t.name) return;
@@ -1825,37 +1596,29 @@
             won: 0,
             drawn: 0,
             lost: 0,
-            gf: 0, // Gol Memasukkan (Goals For)
-            ga: 0, // Gol Kemasukan (Goals Against)
-            gd: 0, // Selisih Gol (Goal Difference)
+            gf: 0,
+            ga: 0,
+            gd: 0,
             points: 0,
-            yc: 0, // Kartu Kuning (untuk tie-breaker Fair Play jika dibutuhkan)
-            rc: 0, // Kartu Merah
+            yc: 0,
+            rc: 0,
           };
         });
-
-        // 2. Hitung semua statistik dari pertandingan yang sudah dimainkan
         matches.forEach((m) => {
-          const h = standingsMap[m.home];
-          const a = standingsMap[m.away];
-          if (!h || !a) return; // Lewati jika tim belum diisi
-
-          const hs = m.homeScore;
-          const as = m.awayScore;
-
-          // Hanya hitung jika pertandingan sudah dimainkan (skor bukan null)
+          const h = standingsMap[m.home],
+            a = standingsMap[m.away];
+          if (!h || !a) return;
+          const hs = m.homeScore,
+            as = m.awayScore;
           if (hs !== null && as !== null && hs !== "" && as !== "") {
             h.played++;
             a.played++;
-
-            const homeScore = Number(hs);
-            const awayScore = Number(as);
-
+            const homeScore = Number(hs),
+              awayScore = Number(as);
             h.gf += homeScore;
             h.ga += awayScore;
             a.gf += awayScore;
             a.ga += homeScore;
-
             if (homeScore > awayScore) {
               h.won++;
               h.points += 3;
@@ -1871,8 +1634,6 @@
               a.points += 1;
             }
           }
-
-          // Hitung kartu kuning dan merah dari array scorers
           if (m.homeScorers && m.homeScorers.length > 0) {
             m.homeScorers.forEach((p) => {
               if (p.yc) h.yc++;
@@ -1886,35 +1647,19 @@
             });
           }
         });
-
-        // 3. Hitung GD (Selisih Gol)
         Object.values(standingsMap).forEach((s) => {
           s.gd = s.gf - s.ga;
         });
-
-        // 4. UBAH KE ARRAY LALU SORTING DENGAN TIE-BREAKER
         let standingsArr = Object.values(standingsMap);
-
         standingsArr.sort((a, b) => {
-          // Tie-breaker 1: Poin lebih tinggi
           if (b.points !== a.points) return b.points - a.points;
-
-          // Tie-breaker 2: Selisih Gol (GD) lebih tinggi
           if (b.gd !== a.gd) return b.gd - a.gd;
-
-          // Tie-breaker 3: Gol Memasukkan (GF) lebih tinggi <- INI YANG MEMPERBAIKI MASALAH ANDA
           if (b.gf !== a.gf) return b.gf - a.gf;
-
-          // Tie-breaker 4 (Opsional): Poin Fair Play (Kartu Kuning/Merah lebih sedikit lebih baik)
-          const aFP = a.yc + a.rc * 3;
-          const bFP = b.yc + b.rc * 3;
-          if (bFP !== aFP) return aFP - bFP; // Semakin sedikit kartu, semakin tinggi peringkat
-
-          // Tie-breaker 5: Urutkan berdasarkan abjad jika semua di atas sama persis
+          const aFP = a.yc + a.rc * 3,
+            bFP = b.yc + b.rc * 3;
+          if (bFP !== aFP) return aFP - bFP;
           return a.team.localeCompare(b.team);
         });
-
-        // 5. Simpan hasilnya ke state.standings
         state.standings[g] = standingsArr;
       }
 
@@ -1942,7 +1687,6 @@
             }
           }
         }
-
         if (s === "sf") {
           if (w) {
             state.matches.final[0].home =
@@ -1968,6 +1712,7 @@
         state.matches[n][nIdx][pos + "Scorers"] = [];
       }
 
+      // Proses kualifikasi dinamis (Termasuk Best 3rd Places)
       function processQualification() {
         GROUPS.forEach((g) => calcStand(g));
         const w = {},
@@ -1977,45 +1722,74 @@
           const s = state.standings[g];
           if (s[0]) w[g] = state.groups[g].find((t) => t.name === s[0].team);
           if (s[1]) r[g] = state.groups[g].find((t) => t.name === s[1].team);
-          if (s[2]) th[g] = state.groups[g].find((t) => t.name === s[2].team);
+          if (s[2])
+            th[g] = {
+              team: state.groups[g].find((t) => t.name === s[2].team),
+              group: g,
+            };
         });
+
+        // Cari 8 peringkat 3 terbaik secara dinamis
+        const allThirds = Object.values(th).filter((t) => t.team);
+        allThirds.sort((a, b) => {
+          if (b.team.points !== a.team.points)
+            return b.team.points - a.team.points;
+          if (b.team.gd !== a.team.gd) return b.team.gd - a.team.gd;
+          if (b.team.gf !== a.team.gf) return b.team.gf - a.team.gf;
+          return a.team.team.localeCompare(b.team.team);
+        });
+
+        const best8Thirds = allThirds.slice(0, 8);
+        state.bestThirds = best8Thirds;
+
+        const bestThirdGroups = best8Thirds.map((t) => t.group);
+        const getThByGroup = (group) =>
+          th[group] ? th[group].team : { name: "TBD", code: "" };
+
         const get = (o, k) => o[k] || { name: "TBD", code: "" };
-        const getTh = (arr) => {
-          for (let g of arr) if (th[g]) return th[g];
-          return { name: "TBD", code: "" };
-        };
 
         const x = state.matches.r32;
+
+        // Distribusikan 3rd place ke match yang memungkinkan
+        // Sesuai jalur resmi FIFA 2026
+        const thMap = {};
+        best8Thirds.forEach((t, i) => {
+          thMap[i + 1] = t.group;
+        });
+
+        // Isi 3rd place
+        x[1].away = getThByGroup(thMap[1]); // E-1 vs 3rd(1)
+        x[4].away = getThByGroup(thMap[2]); // I-1 vs 3rd(2)
+        x[6].away = getThByGroup(thMap[3]); // A-1 vs 3rd(3)
+        x[7].away = getThByGroup(thMap[4]); // L-1 vs 3rd(4)
+        x[8].away = getThByGroup(thMap[5]); // D-1 vs 3rd(5)
+        x[9].away = getThByGroup(thMap[6]); // G-1 vs 3rd(6)
+        x[12].away = getThByGroup(thMap[7]); // B-1 vs 3rd(7)
+        x[14].away = getThByGroup(thMap[8]); // K-1 vs 3rd(8)
+
+        // Isi Winners & Runners Up
         x[0].home = get(r, "A");
         x[0].away = get(r, "B");
         x[1].home = get(w, "E");
-        x[1].away = getTh(["A", "B", "C", "D", "F"]);
         x[2].home = get(w, "F");
         x[2].away = get(r, "C");
         x[3].home = get(w, "B");
         x[3].away = get(r, "F");
         x[4].home = get(w, "I");
-        x[4].away = getTh(["C", "D", "F", "G", "H"]);
         x[5].home = get(r, "E");
         x[5].away = get(r, "I");
         x[6].home = get(w, "A");
-        x[6].away = getTh(["C", "E", "F", "H", "I"]);
         x[7].home = get(w, "L");
-        x[7].away = getTh(["E", "H", "I", "J", "K"]);
         x[8].home = get(w, "D");
-        x[8].away = getTh(["B", "E", "F", "I", "J"]);
         x[9].home = get(w, "G");
-        x[9].away = getTh(["A", "E", "H", "I", "J"]);
         x[10].home = get(r, "K");
         x[10].away = get(r, "L");
         x[11].home = get(w, "H");
         x[11].away = get(r, "J");
         x[12].home = get(w, "B");
-        x[12].away = getTh(["E", "F", "G", "I", "J"]);
         x[13].home = get(w, "J");
         x[13].away = get(r, "H");
         x[14].home = get(w, "K");
-        x[14].away = getTh(["D", "E", "I", "J", "L"]);
         x[15].home = get(r, "D");
         x[15].away = get(r, "G");
 
@@ -2031,7 +1805,12 @@
         });
         document.getElementById("champion-display").classList.add("hidden");
         renderAll();
-        alert("Qualified!");
+        alert("Qualified! Best 3rd teams have been assigned.");
+      }
+
+      // Shortcut tombol Auto Fill
+      function autoFillBestThirds() {
+        processQualification();
       }
 
       function renderSchedule() {
@@ -2072,71 +1851,55 @@
         const card = (
           m,
         ) => `<div class="schedule-card card p-4 mb-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
-      <div class="flex-1 text-xs">
-      <div class="font-bold text-[--secondary]">${m.round}</div>
-      <div class="text-[10px] text-[--accent]">${m.stadium || "Stadium TBD"}</div>
-      <div class="mt-1">
-      <span class="text-[--fg]">${m.date || "Date TBD"}</span>
-      <span class="ml-1">${m.time || ""}</span>
-      </div>
-      </div>
-      <div class="flex-1 flex items-center justify-between bg-black/10 p-3 rounded-lg">
-      <div class="flex items-center gap-2 font-semibold">${getFlagHTML(m.home)}<span>${m.home.name}</span></div>
-      <div class="text-lg font-bold px-4 text-[--accent]">${formatScore(m)}</div>
-      <div class="flex items-center gap-2 font-semibold"><span>${m.away.name}</span>${getFlagHTML(m.away)}</div>
-      </div>
-      </div>`;
+          <div class="flex-1 text-xs">
+            <div class="font-bold text-[--secondary]">${m.round}</div>
+            <div class="text-[10px] text-[--accent]">${m.stadium || "Stadium TBD"}</div>
+            <div class="mt-1"><span class="text-[--fg]">${m.date || "Date TBD"}</span><span class="ml-1">${m.time || ""}</span></div>
+          </div>
+          <div class="flex-1 flex items-center justify-between bg-black/10 p-3 rounded-lg">
+            <div class="flex items-center gap-2 font-semibold">${getFlagHTML(m.home)}<span>${m.home.name}</span></div>
+            <div class="text-lg font-bold px-4 text-[--accent]">${formatScore(m)}</div>
+            <div class="flex items-center gap-2 font-semibold"><span>${m.away.name}</span>${getFlagHTML(m.away)}</div>
+          </div>
+        </div>`;
 
         c.innerHTML = `<h3 class="font-display text-xl text-[--secondary] mb-3">Upcoming</h3>${upc.length ? upc.map(card).join("") : '<p class="text-[--muted] text-sm">None</p>'}<h3 class="font-display text-xl mt-8 mb-3 text-[--muted]">Results</h3>${ply.length ? ply.map(card).join("") : '<p class="text-[--muted] text-sm">None</p>'}`;
       }
 
       function renderStats() {
-        // ==========================================
-        // 1. GOLDEN BOOT (Rekap dari semua match)
-        // ==========================================
         const scorerMap = {};
         const countScorers = (scorersArr, teamName) => {
           if (!scorersArr) return;
-          // Gunakan ensureScorerFormat agar data lama (string) tetap terbaca
           const fixedArr = ensureScorerFormat(scorersArr);
-
           fixedArr.forEach((scorerObj) => {
-            const name = scorerObj.name;
-            const isOG = scorerObj.og;
-
-            // PENTING: Gol Own Goal (OG) TIDAK dihitung untuk Golden Boot
-            if (name && !isOG) {
-              if (!scorerMap[name]) {
-                scorerMap[name] = { name: name, team: teamName, goals: 0 };
-              }
-              scorerMap[name].goals++;
+            if (scorerObj.name && !scorerObj.og) {
+              if (!scorerMap[scorerObj.name])
+                scorerMap[scorerObj.name] = {
+                  name: scorerObj.name,
+                  team: teamName,
+                  goals: 0,
+                };
+              scorerMap[scorerObj.name].goals++;
             }
           });
         };
-
-        // Loop Group Stage
-        GROUPS.forEach((g) => {
+        GROUPS.forEach((g) =>
           state.matches.groups[g].forEach((m) => {
             if (m.homeScore != null && state.groups[g][m.home]) {
-              const h = state.groups[g][m.home],
-                a = state.groups[g][m.away];
-              countScorers(m.homeScorers, h.name);
-              countScorers(m.awayScorers, a.name);
+              countScorers(m.homeScorers, state.groups[g][m.home].name);
+              countScorers(m.awayScorers, state.groups[g][m.away].name);
             }
-          });
-        });
-
-        // Loop Knockout Stage
-        ["r32", "r16", "qf", "sf", "third", "final"].forEach((s) => {
+          }),
+        );
+        ["r32", "r16", "qf", "sf", "third", "final"].forEach((s) =>
           state.matches[s].forEach((m) => {
             if (m.homeScore != null && m.home) {
               countScorers(m.homeScorers, m.home.name);
               countScorers(m.awayScorers, m.away.name);
             }
-          });
-        });
+          }),
+        );
 
-        // Render Golden Boot
         const sl = document.getElementById("top-scorer-list");
         const topScorers = Object.values(scorerMap).sort(
           (a, b) => b.goals - a.goals,
@@ -2151,9 +1914,6 @@
               .join("")
           : '<p class="text-[--muted] text-sm">No data</p>';
 
-        // ==========================================
-        // 2. BEST OFFENSIVE, DEFENSIVE, CLEAN SHEET
-        // ==========================================
         const ts = {};
         const init = (n, c) => {
           if (!n || n.startsWith("TBD")) return;
@@ -2166,7 +1926,6 @@
           ts[n].pl++;
           if (ga === 0) ts[n].cs++;
         };
-
         GROUPS.forEach((g) =>
           state.matches.groups[g].forEach((m) => {
             if (m.homeScore != null && state.groups[g][m.home]) {
@@ -2191,7 +1950,6 @@
         );
 
         const arr = Object.values(ts);
-
         document.getElementById("stat-attack").innerHTML = arr
           .sort((a, b) => b.gf - a.gf)
           .slice(0, 5)
@@ -2200,7 +1958,6 @@
               `<div class="award-item"><div class="flex items-center gap-2">${getFlagHTML(t)}<span class="font-semibold text-xs">${t.name}</span></div><span class="font-bold text-[--success]">${t.gf} G</span></div>`,
           )
           .join("");
-
         document.getElementById("stat-defense").innerHTML = arr
           .filter((t) => t.pl > 0)
           .sort((a, b) => a.ga - b.ga)
@@ -2210,7 +1967,6 @@
               `<div class="award-item"><div class="flex items-center gap-2">${getFlagHTML(t)}<span class="font-semibold text-xs">${t.name}</span></div><span class="font-bold text-[--danger]">${t.ga} Cn</span></div>`,
           )
           .join("");
-
         document.getElementById("top-clean-sheet-list").innerHTML = arr
           .filter((t) => t.pl > 0)
           .sort((a, b) => b.cs - a.cs)
@@ -2221,21 +1977,15 @@
           )
           .join("");
 
-        // ==========================================
-        // 3. HAT-TRICKS (Diperbaiki untuk membaca Object)
-        // ==========================================
         let ht = [];
         const checkHattrick = (m, hName, aName) => {
           if (!m.homeScorers) return;
-
           const cnt = (scorersArr, teamName) => {
             const fixedArr = ensureScorerFormat(scorersArr);
             const c = {};
             fixedArr.forEach((scorerObj) => {
-              // Hitung hat-trick hanya jika bukan Own Goal
-              if (scorerObj.name && !scorerObj.og) {
+              if (scorerObj.name && !scorerObj.og)
                 c[scorerObj.name] = (c[scorerObj.name] || 0) + 1;
-              }
             });
             return Object.entries(c).map(([n, goalCount]) => ({
               name: n,
@@ -2243,14 +1993,12 @@
               c: goalCount,
             }));
           };
-
           cnt(m.homeScorers, hName)
             .concat(cnt(m.awayScorers, aName))
             .forEach((p) => {
               if (p.c >= 3) ht.push(p);
             });
         };
-
         GROUPS.forEach((g) =>
           state.matches.groups[g].forEach((m) => {
             if (m.homeScore != null)
@@ -2261,14 +2009,12 @@
               );
           }),
         );
-
         ["r32", "r16", "qf", "sf", "third", "final"].forEach((s) =>
           state.matches[s].forEach((m) => {
             if (m.homeScore != null && m.home)
               checkHattrick(m, m.home.name, m.away.name);
           }),
         );
-
         document.getElementById("hat-trick-list").innerHTML = ht.length
           ? ht
               .map(
@@ -2277,12 +2023,11 @@
               )
               .join("")
           : '<p class="text-[--muted] text-xs">None</p>';
-        processCards(); // <--- TAMBAHKAN INI DI SINI
 
+        processCards();
         function processCards() {
-          const ycData = {};
-          const rcData = {};
-
+          const ycData = {},
+            rcData = {};
           const allMatchArrays = [
             ...Object.values(state.matches.groups).flat(),
             ...(state.matches.r32 || []),
@@ -2292,12 +2037,10 @@
             ...(state.matches.third || []),
             ...(state.matches.final || []),
           ];
-
           allMatchArrays.forEach((match) => {
             if (!match) return;
             const processSide = (scorers, sideIndex) => {
               let teamName = "";
-              // Cari nama tim berdasarkan index (grup) atau langsung ambil nama (knockout)
               if (match.round && match.round.startsWith("Group")) {
                 const groupName = match.round.split(" ")[1];
                 const teams = state.groups[groupName];
@@ -2308,14 +2051,13 @@
                 if (sideIndex === "away" && match.away && match.away.name)
                   teamName = match.away.name;
               }
-
               const formattedScorers = ensureScorerFormat(scorers);
               formattedScorers.forEach((p) => {
                 if (p.yc) {
                   if (!ycData[p.name])
                     ycData[p.name] = { team: teamName, count: 0 };
                   ycData[p.name].count += 1;
-                  ycData[p.name].team = teamName || ycData[p.name].team; // Update team jika sebelumnya kosong
+                  ycData[p.name].team = teamName || ycData[p.name].team;
                 }
                 if (p.rc) {
                   if (!rcData[p.name])
@@ -2325,64 +2067,35 @@
                 }
               });
             };
-
             processSide(match.homeScorers || [], match.home);
             processSide(match.awayScorers || [], match.away);
           });
-
-          // Render Yellow Cards
           const ycList = document.getElementById("yc-list");
           const ycArr = Object.entries(ycData).sort(
             (a, b) => b[1].count - a[1].count,
           );
-          if (ycArr.length === 0) {
-            ycList.innerHTML =
-              '<p class="text-xs text-[--muted] italic">Belum ada data</p>';
-          } else {
-            ycList.innerHTML = ycArr
-              .map(
-                ([name, data], i) => `
-            <div class="flex items-center justify-between text-xs">
-              <div class="flex items-center gap-2">
-                <span class="font-bold text-[--muted] w-4">${i + 1}.</span>
-                <span class="font-semibold">${name}</span>
-                <span class="text-[--muted]">(${data.team})</span>
-              </div>
-              <span class="flex items-center gap-1 font-bold" style="color: #facc15;">
-                <span class="card-icon yellow" style="width:6px;height:10px;"></span> ${data.count}
-              </span>
-            </div>
-          `,
-              )
-              .join("");
-          }
-
-          // Render Red Cards
+          ycList.innerHTML =
+            ycArr.length === 0
+              ? '<p class="text-xs text-[--muted] italic">Belum ada data</p>'
+              : ycArr
+                  .map(
+                    ([name, data], i) =>
+                      `<div class="flex items-center justify-between text-xs"><div class="flex items-center gap-2"><span class="font-bold text-[--muted] w-4">${i + 1}.</span><span class="font-semibold">${name}</span><span class="text-[--muted]">(${data.team})</span></div><span class="flex items-center gap-1 font-bold" style="color: #facc15;"><span class="card-icon yellow" style="width:6px;height:10px;"></span> ${data.count}</span></div>`,
+                  )
+                  .join("");
           const rcList = document.getElementById("rc-list");
           const rcArr = Object.entries(rcData).sort(
             (a, b) => b[1].count - a[1].count,
           );
-          if (rcArr.length === 0) {
-            rcList.innerHTML =
-              '<p class="text-xs text-[--muted] italic">Belum ada data</p>';
-          } else {
-            rcList.innerHTML = rcArr
-              .map(
-                ([name, data], i) => `
-            <div class="flex items-center justify-between text-xs">
-              <div class="flex items-center gap-2">
-                <span class="font-bold text-[--muted] w-4">${i + 1}.</span>
-                <span class="font-semibold">${name}</span>
-                <span class="text-[--muted]">(${data.team})</span>
-              </div>
-              <span class="flex items-center gap-1 font-bold" style="color: #ef4444;">
-                <span class="card-icon red" style="width:6px;height:10px;"></span> ${data.count}
-              </span>
-            </div>
-          `,
-              )
-              .join("");
-          }
+          rcList.innerHTML =
+            rcArr.length === 0
+              ? '<p class="text-xs text-[--muted] italic">Belum ada data</p>'
+              : rcArr
+                  .map(
+                    ([name, data], i) =>
+                      `<div class="flex items-center justify-between text-xs"><div class="flex items-center gap-2"><span class="font-bold text-[--muted] w-4">${i + 1}.</span><span class="font-semibold">${name}</span><span class="text-[--muted]">(${data.team})</span></div><span class="flex items-center gap-1 font-bold" style="color: #ef4444;"><span class="card-icon red" style="width:6px;height:10px;"></span> ${data.count}</span></div>`,
+                  )
+                  .join("");
         }
       }
 
@@ -2432,19 +2145,13 @@
 
       document.addEventListener("DOMContentLoaded", () => {
         loadTheme();
-        if (!loadFromLocal()) initState();
-        // Cek apakah ada data tersimpan, jika ada timpa statenya
         const loaded = loadFromLocal();
-        if (loaded) {
-          // Jika data lama berhasil dimuat, render ulang menggunakan data dari localStorage
-          renderAll();
-        } else {
-          // Jika tidak ada data (pertama kali buka), render dengan data kosong default
+        if (!loaded) {
+          initState();
           GROUPS.forEach((g) => calcStand(g));
-          renderAll();
         }
-
-        loadTheme(); // Load tema (dark/light)
+        renderAll();
+        loadTheme();
       });
     </script>
   </body>
